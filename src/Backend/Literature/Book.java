@@ -14,7 +14,7 @@ public class Book {
 
 	public String getBookName(){
 		return bookName;
-	}name
+	}
 
 	public void setBookAuthor(String bookAuthor){
 		this.bookAuthor = bookAuthor;
