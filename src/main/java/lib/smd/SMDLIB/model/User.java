@@ -1,7 +1,7 @@
 package lib.smd.SMDLIB.model;
 
 public class User {
-	private int id;
+	private int id, booksLeased;
 	private String fname, lname, email, pass;
 	
 	public User(int id, String fname, String lname, String email, String pass) {
@@ -12,16 +12,38 @@ public class User {
 		this.pass = pass;
 	}
 	
-	public String getUserName() {
-		return fname;
+	public void setUserID(int id) {
+		this.id = id;
 	}
 	
-	public void setUserPass(String newPass) {
-		pass = newPass;
+	public void setUserName(String fname, String lname) {
+		this.fname = fname;
+		this.lname = lname;
+	}
+	
+	public void setUserEmail(String email) {
+		this.email = email;
+	}
+	
+	public void setUserPass(String pass) {
+		this.pass = pass;
 	}
 	
 	public int getUserID() {
 		return id;
+	}
+	
+	public String getUserName() {
+		String userFullName = fname + " " + lname;
+		return userFullName;
+	}
+	
+	public String getUserEmail() {
+		return email;
+	}
+	
+	public String getUserPass() {
+		return pass;
 	}
 	
 	public String getUserInfo() {

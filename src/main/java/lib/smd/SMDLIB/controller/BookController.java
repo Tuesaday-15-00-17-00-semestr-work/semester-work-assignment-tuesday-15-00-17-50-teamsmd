@@ -12,34 +12,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import lib.smd.SMDLIB.model.User;
-import lib.smd.SMDLIB.repo.UserRepo;
+import lib.smd.SMDLIB.model.Book;
+import lib.smd.SMDLIB.repo.BookRepo;
 
 @RestController
-@RequestMapping("/api/users")
-public class UserController {
+@RequestMapping("/api/books")
+public class BookController {
 		
 		
-		private final UserRepo userRep;
+		private final BookRepo bookRep;
 		
-		public UserController(UserRepo userRep) {
-			this.userRep = userRep;
+		public BookController(BookRepo bookRep) {
+			this.bookRep = bookRep;
 		}
 		
 		@GetMapping("")
-		List<String> findAllUsers(){
-			return userRep.findAllUsers();
+		List<String> findAllBooks(){
+			return bookRep.findAllBooks();
 		}
 		
 		@GetMapping("/{id}")
-		String findByID(@PathVariable int id) {
-			return userRep.findUserByID(id);
+		String findBookByID(@PathVariable int id) {
+			return bookRep.findBookByID(id);
 		}
 		
 		@ResponseStatus(HttpStatus.CREATED)
 		@PostMapping("")
-		void createUser(@RequestBody String fname, String lname, String email, String pass) {
-			userRep.addNewUser(fname, lname, email, pass);
+		void createBook(@RequestBody String name, String author, String type) {
+			bookRep.addNewBook(name, author, type);
 		}
 		
 }

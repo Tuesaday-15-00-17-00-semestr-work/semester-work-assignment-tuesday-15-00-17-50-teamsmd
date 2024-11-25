@@ -22,7 +22,7 @@ public class UserRepo {
 	}
 	
 	//GET users by id
-	public String findByID(int ID) {
+	public String findUserByID(int ID) {
 		for(User u : users) {
 			if(u.getUserID() == ID) {
 				return u.getUserInfo();
