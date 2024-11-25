@@ -1,0 +1,10 @@
+.button {
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-color: lightblue;
+}
+
+.label {
+    -fx-font-size: 16px;
+    -fx-text-fill: black;
+}
