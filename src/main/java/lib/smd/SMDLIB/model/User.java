@@ -16,6 +16,10 @@ public class User {
 		return fname;
 	}
 	
+	public void setUserPass(String newPass) {
+		pass = newPass;
+	}
+	
 	public int getUserID() {
 		return id;
 	}
