@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lib.smd.SMDLIB.model.User;
+import lib.smd.SMDLIB.model.UserR;
 import lib.smd.SMDLIB.repo.UserRepo;
 
 @RestController
@@ -27,7 +28,7 @@ public class UserController {
 		}
 		
 		@GetMapping("")
-		List<String> findAllUsers(){
+		List<UserR> findAllUsers(){
 			return userRep.findAllUsers();
 		}
 		
@@ -38,8 +39,8 @@ public class UserController {
 		
 		@ResponseStatus(HttpStatus.CREATED)
 		@PostMapping("")
-		void createUser(@RequestBody String fname, String lname, String email, String pass) {
-			userRep.addNewUser(fname, lname, email, pass);
+		void createUser(@RequestBody String username, String email, String pass) {
+			userRep.addNewUser(username, email, pass);
 		}
 		
 }

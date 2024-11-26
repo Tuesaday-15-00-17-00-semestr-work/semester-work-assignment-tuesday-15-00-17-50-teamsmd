@@ -3,22 +3,32 @@ package lib.smd.SMDLIB.repo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 import jakarta.annotation.PostConstruct;
+import lib.smd.SMDLIB.SmdlibApplication;
 import lib.smd.SMDLIB.model.User;
+import lib.smd.SMDLIB.model.UserR;
 
 @Repository
 public class UserRepo {
+	
 	private List<User> users = new ArrayList<User>();
 	
+	private static final Logger log = LoggerFactory.getLogger(SmdlibApplication.class);
+	private final JdbcClient jdbcKlient;
+	
+	public UserRepo(JdbcClient jdbcKlient) {
+		this.jdbcKlient = jdbcKlient;
+	}
+	
+	
 	//GET all users
-	public List<String> findAllUsers(){
-		List<String> namesOfUsers = new ArrayList<String>();
-		for(User u : users) {
-			namesOfUsers.add(u.getUserInfo());
-		}
-		return namesOfUsers;
+	public List<UserR> findAllUsers(){
+		return jdbcKlient.sql("Select * from Users").query(UserR.class).list();		
 	}
 	
 	//GET users by id
@@ -32,9 +42,9 @@ public class UserRepo {
 	}
 	
 	//POST add user
-	public void addNewUser(String fname, String lname, String email, String pass) {
-		users.add(new User(users.getLast().getUserID()+1,fname,lname, email,pass));
-		System.out.println("User " + fname + " added!");
+	public void addNewUser(String username, String email, String pass) {
+		users.add(new User(users.getLast().getUserID()+1,username, email,pass));
+		System.out.println("User " + username + " added!");
 	}
 	
 	//DELETE delete user
@@ -44,7 +54,7 @@ public class UserRepo {
 	
 	@PostConstruct
 	private void init() {
-		users.add(new User(1,"John","Smith", "john@mail.com","123"));
-		users.add(new User(2,"Peter","Griffin", "peter@mail.com","321"));
+		users.add(new User(1,"JohnSmith", "john@mail.com","123"));
+		users.add(new User(2,"PeterGriffin", "peter@mail.com","321"));
 	}
 }

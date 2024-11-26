@@ -1,13 +1,12 @@
 package lib.smd.SMDLIB.model;
 
 public class User {
-	private int id, booksLeased;
-	private String fname, lname, email, pass;
+	private int id, booksLeased, role_id;
+	private String username, email, pass;
 	
-	public User(int id, String fname, String lname, String email, String pass) {
+	public User(int id, String username, String email, String pass) {
 		this.id = id;
-		this.fname = fname;
-		this.lname = lname;
+		this.username = username;
 		this.email = email;
 		this.pass = pass;
 	}
@@ -16,9 +15,8 @@ public class User {
 		this.id = id;
 	}
 	
-	public void setUserName(String fname, String lname) {
-		this.fname = fname;
-		this.lname = lname;
+	public void setUserName(String username) {
+		this.username = username;
 	}
 	
 	public void setUserEmail(String email) {
@@ -34,8 +32,7 @@ public class User {
 	}
 	
 	public String getUserName() {
-		String userFullName = fname + " " + lname;
-		return userFullName;
+		return username;
 	}
 	
 	public String getUserEmail() {
@@ -48,8 +45,7 @@ public class User {
 	
 	public String getUserInfo() {
 		String info = "ID: " + id+
-					  " First Name: " + fname+
-					  " Last Name: " + lname+
+					  " First Name: " +username+
 					  " Email: " + email;
 		return info;
 	}
