@@ -28,7 +28,7 @@ public class UserController {
 		}
 		
 		@GetMapping("")
-		List<UserR> findAllUsers(){
+		List<String> findAllUsers(){
 			return userRep.findAllUsers();
 		}
 		

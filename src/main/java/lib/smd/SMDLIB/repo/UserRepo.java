@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
+import Database.DatabaseConnection;
 import jakarta.annotation.PostConstruct;
 import lib.smd.SMDLIB.SmdlibApplication;
 import lib.smd.SMDLIB.model.User;
@@ -19,11 +20,11 @@ public class UserRepo {
 	private List<User> users = new ArrayList<User>();
 	
 	private static final Logger log = LoggerFactory.getLogger(SmdlibApplication.class);
-	
+	private static DatabaseConnection DBC;
 	
 	//GET all users
-	public List<UserR> findAllUsers(){
-		return null;		
+	public List<String> findAllUsers(){
+		return DBC.displayTable("Users");
 	}
 	
 	//GET users by id
