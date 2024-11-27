@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lib.smd.SMDLIB.model.User;
-import lib.smd.SMDLIB.model.UserR;
 import lib.smd.SMDLIB.repo.UserRepo;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/admin/users")
 public class UserController {
 		
 		
@@ -28,19 +27,19 @@ public class UserController {
 		}
 		
 		@GetMapping("")
-		List<String> findAllUsers(){
-			return userRep.findAllUsers();
+		List<User> findAllUsers(){
+			return userRep.displayTable();
 		}
 		
 		@GetMapping("/{id}")
-		String findByID(@PathVariable int id) {
-			return userRep.findUserByID(id);
+		User findByID(@PathVariable int id) {
+			return userRep.displayUser(id);
 		}
 		
 		@ResponseStatus(HttpStatus.CREATED)
 		@PostMapping("")
-		void createUser(@RequestBody String username, String email, String pass) {
-			userRep.addNewUser(username, email, pass);
+		void createUser(@RequestBody String username, String password, int role, String email) {
+			userRep.addUserToDB(username, password, role, email);
 		}
 		
 }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseConnection {
-	static ResultSet rs;
+	public static ResultSet rs;
 	public static Statement statement;
 	public static Connection connection = null;
 	private static String pathToDB = "src/main/java/Database/LIBDB.db";
@@ -19,65 +19,9 @@ public class DatabaseConnection {
 			statement.setQueryTimeout(30);
 			return "Database connected!";
 
-			//ak chcem pridat do sql DB tak treba pouzit statement.executeUpdate(prikaz); lol
-			//statement.executeUpdate("");
 		}catch(SQLException e) {
 			System.err.println(e.getMessage());
 			return "SQLite connection failed: " + e;
-		}
-	}
-	
-	public static List<String> displayTable(String tableName) { //prerobit vsetko na vlastne
-		String insertSQL = "SELECT * FROM "+tableName+";";
-		
-		try {
-			List<String> out = new ArrayList<String>();
-			String con;
-            rs = statement.executeQuery(insertSQL);
-		    while(rs.next()) {
-		    	out.add("ID: " + rs.getString("user_id"));
-		        out.add("Username: " + rs.getString("username"));
-		        out.add("E-mail: " + rs.getString("email"));
-		        out.add("Role: " + rs.getString("role_id") + "\n\n");
-		    }
-		    return out;
-		}catch(SQLException e){
-			System.err.println("Error printing "+tableName+"table: "+e.getMessage());
-		}
-		return null;
-	}
-//-----------------------TABLE: Users-------------------------|
-	public static void addUserToDB(String username, String password, int role, String email){
-		String insertSQL = "INSERT INTO Users(username, password, role_id, email) VALUES(?,?,?,?);";
-		
-		try {	
-			
-            PreparedStatement statement = connection.prepareStatement(insertSQL);
-            statement.setString(1, username);
-            statement.setString(2, password);
-            statement.setInt(3, role);
-            statement.setString(4, email);
-			
-			statement.executeUpdate();
-			System.out.println("User " +username+" added!");
-		}catch(SQLException e){
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	public static void deleteUserFromDB(int id){
-		
-		String insertSQL = "DELETE FROM Users WHERE ID=?;";
-		
-		try {	
-			
-            PreparedStatement statement = connection.prepareStatement(insertSQL);
-            statement.setInt(1, id);
-			
-			statement.executeUpdate();
-			System.out.println("User removed!");
-		}catch(SQLException e){
-			System.err.println(e.getMessage());
 		}
 	}
 

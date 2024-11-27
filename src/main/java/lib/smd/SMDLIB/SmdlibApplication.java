@@ -20,15 +20,7 @@ public class SmdlibApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SmdlibApplication.class, args);
 		log.info(DBC.connectToDB());
-		log.info("ZMENA!");
-	}
-	
-	@Bean
-	CommandLineRunner runner() {
-		return args -> {
-			Book book = new Book();
-			log.info(book.toString());
-		};
+		log.info("Server is UP!");
 	}
 
 }

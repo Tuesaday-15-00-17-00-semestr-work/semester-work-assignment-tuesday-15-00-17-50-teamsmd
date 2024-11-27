@@ -10,7 +10,7 @@ import lib.smd.SMDLIB.model.Book;
 
 @Repository
 public class BookRepo {
-	private List<Book> books = new ArrayList<Book>();
+	/*private List<Book> books = new ArrayList<Book>();
 	
 	//GET all books
 	public List<String> findAllBooks(){
@@ -46,5 +46,5 @@ public class BookRepo {
 	private void init() {
 		books.add(new Book(1,"1984", "George Orwell","Roman"));
 		books.add(new Book(2,"The old man and the sea","Ernest Hemingway", "Novel"));
-	}
+	}*/
 }

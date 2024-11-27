@@ -35,6 +35,8 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		
+		<!-- Login and Register-->
+		
 		<!-- JDBC API dependency-->
 		<dependency>
       		<groupId>org.springframework.boot</groupId>

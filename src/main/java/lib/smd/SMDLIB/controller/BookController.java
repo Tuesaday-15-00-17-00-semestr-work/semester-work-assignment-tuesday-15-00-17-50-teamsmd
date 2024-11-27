@@ -20,7 +20,7 @@ import lib.smd.SMDLIB.repo.BookRepo;
 public class BookController {
 		
 		
-		private final BookRepo bookRep;
+		/*private final BookRepo bookRep;
 		
 		public BookController(BookRepo bookRep) {
 			this.bookRep = bookRep;
@@ -40,6 +40,6 @@ public class BookController {
 		@PostMapping("")
 		void createBook(@RequestBody String name, String author, String type) {
 			bookRep.addNewBook(name, author, type);
-		}
+		}*/
 		
 }
