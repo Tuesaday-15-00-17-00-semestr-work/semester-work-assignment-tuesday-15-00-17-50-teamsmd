@@ -19,16 +19,11 @@ public class UserRepo {
 	private List<User> users = new ArrayList<User>();
 	
 	private static final Logger log = LoggerFactory.getLogger(SmdlibApplication.class);
-	private final JdbcClient jdbcKlient;
-	
-	public UserRepo(JdbcClient jdbcKlient) {
-		this.jdbcKlient = jdbcKlient;
-	}
 	
 	
 	//GET all users
 	public List<UserR> findAllUsers(){
-		return jdbcKlient.sql("Select * from Users").query(UserR.class).list();		
+		return null;		
 	}
 	
 	//GET users by id
