@@ -69,8 +69,9 @@ public class DatabaseConnection {
 	}
 	
 	private static void createTableTransaction() {
-		try {
-			statement.executeUpdate("CREATE TABLE IF NOT EXISTS Transaction("
+		try {	statement = connection.createStatement();
+		
+			statement.executeUpdate("CREATE TABLE IF NOT EXISTS Borrows(" //I cant name it Transaction :(
 								+ "transaction_id INTEGER PRIMARY KEY,"
 								+ "user_id INTEGER NOT NULL,"
 								+ "book_id INTEGER NOT NULL,"

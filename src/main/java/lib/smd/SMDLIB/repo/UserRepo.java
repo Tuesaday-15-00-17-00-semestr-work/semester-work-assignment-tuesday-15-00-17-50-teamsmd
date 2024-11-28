@@ -18,13 +18,14 @@ import lib.smd.SMDLIB.model.User;
 @Repository
 public class UserRepo {
 	
-	private List<User> users = new ArrayList<User>();
+	private List<User> users;
 	
 	private static final Logger log = LoggerFactory.getLogger(SmdlibApplication.class);
 	private static DatabaseConnection DBC;
 	
 	//GET all users
-	public List<User> displayTable() {	
+	public List<User> displayTable() {
+		users = new ArrayList<User>();
 		try {
             DBC.rs = DBC.statement.executeQuery("SELECT * FROM Users;");
 		    while(DBC.rs.next()) {		        
@@ -72,7 +73,7 @@ public class UserRepo {
             statement.setString(4, email);
 			
 			statement.executeUpdate();
-			System.out.println("User " +username+" added!");
+			log.info("User " +username+" added!");
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
 		}
@@ -81,7 +82,7 @@ public class UserRepo {
 	//DELETE delete user
 	public static void deleteUserFromDB(int id){
 		
-		String insertSQL = "DELETE FROM Users WHERE ID=?;";
+		String insertSQL = "DELETE FROM Users WHERE user_id=?;";
 		
 		try {	
 			
@@ -89,15 +90,9 @@ public class UserRepo {
             statement.setInt(1, id);
 			
 			statement.executeUpdate();
-			System.out.println("User removed!");
+			log.info("User removed!");
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
 		}
-	}
-	
-	@PostConstruct
-	private void init() {
-		//users.add(new User(1,"JohnSmith", "john@mail.com","123"));
-		//users.add(new User(2,"PeterGriffin", "peter@mail.com","321"));
 	}
 }

@@ -16,30 +16,30 @@ import lib.smd.SMDLIB.model.Book;
 import lib.smd.SMDLIB.repo.BookRepo;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/lib/books")
 public class BookController {
 		
 		
-		/*private final BookRepo bookRep;
+		private final BookRepo bookRep;
 		
 		public BookController(BookRepo bookRep) {
 			this.bookRep = bookRep;
 		}
 		
 		@GetMapping("")
-		List<String> findAllBooks(){
-			return bookRep.findAllBooks();
+		List<Book> findAllBooks(){
+			return bookRep.displayTable();
 		}
 		
 		@GetMapping("/{id}")
-		String findBookByID(@PathVariable int id) {
-			return bookRep.findBookByID(id);
+		Book findBookByID(@PathVariable int id) {
+			return bookRep.displayBook(id);
 		}
 		
 		@ResponseStatus(HttpStatus.CREATED)
 		@PostMapping("")
-		void createBook(@RequestBody String name, String author, String type) {
-			bookRep.addNewBook(name, author, type);
-		}*/
+		void createBook(@RequestBody String title, String author, int isbn, int available_copies) {
+			bookRep.addBookToDB(title, author, isbn, available_copies);
+		}
 		
 }
