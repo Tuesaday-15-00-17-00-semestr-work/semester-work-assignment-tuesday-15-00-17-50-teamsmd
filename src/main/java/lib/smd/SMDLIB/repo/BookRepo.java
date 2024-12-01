@@ -18,13 +18,14 @@ import lib.smd.SMDLIB.model.User;
 @Repository
 public class BookRepo {
 	
-	private List<Book> books = new ArrayList<Book>();
+	private List<Book> books;
 	
 	private static final Logger log = LoggerFactory.getLogger(SmdlibApplication.class);
 	private static DatabaseConnection DBC;
 	
 	//GET all books
 	public List<Book> displayTable() {	
+		books = new ArrayList<Book>();
 		try {
             DBC.rs = DBC.statement.executeQuery("SELECT * FROM Books;");
 		    while(DBC.rs.next()) {		        
@@ -73,6 +74,30 @@ public class BookRepo {
 			
 			statement.executeUpdate();
 			System.out.println("Title " +title+" added!");
+		}catch(SQLException e){
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	//PUT update book count
+	public void updateBook(int id, int change) {
+		String insertSQL;
+		int newCount;
+		
+		try {	
+			insertSQL = "SELECT * FROM Books WHERE book_id=?;";
+			PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
+            statement.setInt(1, id);
+            DBC.rs = statement.executeQuery();
+            newCount = DBC.rs.getInt("available_copies");
+            
+            insertSQL = "UPDATE Books SET available_copies=? WHERE book_id=?;";
+            statement = DBC.connection.prepareStatement(insertSQL);
+            statement.setInt(1, newCount+change);
+            statement.setInt(2, id);
+            
+            statement.executeUpdate();
+			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
 		}

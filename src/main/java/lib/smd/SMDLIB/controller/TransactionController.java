@@ -11,15 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import lib.smd.SMDLIB.model.Book;
 import lib.smd.SMDLIB.model.Transaction;
-import lib.smd.SMDLIB.repo.BookRepo;
 import lib.smd.SMDLIB.repo.TransactionRepo;
 
 
 @RestController
 @RequestMapping("/lib/transactions")
 public class TransactionController {
+	
 	private final TransactionRepo transRep;
 	
 	public TransactionController(TransactionRepo transRep) {

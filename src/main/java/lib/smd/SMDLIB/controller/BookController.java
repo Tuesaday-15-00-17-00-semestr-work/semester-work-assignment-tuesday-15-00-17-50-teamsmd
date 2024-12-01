@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,6 +41,12 @@ public class BookController {
 		@PostMapping("")
 		void createBook(@RequestBody String title, String author, int isbn, int available_copies) {
 			bookRep.addBookToDB(title, author, isbn, available_copies);
+		}
+		
+		@ResponseStatus(HttpStatus.NO_CONTENT)
+		@PutMapping("/{id}")
+		void updateBook(@PathVariable int id, int change) {
+			bookRep.updateBook(id, change);
 		}
 		
 }

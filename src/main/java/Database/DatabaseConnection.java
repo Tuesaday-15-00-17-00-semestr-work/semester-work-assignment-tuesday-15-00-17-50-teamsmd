@@ -86,17 +86,11 @@ public class DatabaseConnection {
 	}
 	
 	//ONLY FOR TESTING
-	private static void dropTable(String tableName) {
-		
-		String insertSQL = "DROP TABLE ?;";
-		
+	private static void dropTable(String tableName) {		
 		try {	
 			
-            PreparedStatement statement = connection.prepareStatement(insertSQL);
-            statement.setString(1, tableName);
-			
-			statement.executeUpdate();
-			System.out.println("User added!");
+			statement.executeUpdate("DROP TABLE "+tableName+";");
+			System.out.println("Table "+tableName+" dropped!");
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
 		}

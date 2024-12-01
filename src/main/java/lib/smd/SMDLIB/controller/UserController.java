@@ -16,7 +16,7 @@ import lib.smd.SMDLIB.model.User;
 import lib.smd.SMDLIB.repo.UserRepo;
 
 @RestController
-@RequestMapping("/admin/users")
+@RequestMapping("/admin")
 public class UserController {
 		
 		
@@ -26,12 +26,12 @@ public class UserController {
 			this.userRep = userRep;
 		}
 		
-		@GetMapping("")
+		@GetMapping("/users")
 		List<User> findAllUsers(){
 			return userRep.displayTable();
 		}
 		
-		@GetMapping("/{id}")
+		@GetMapping("users/{id}")
 		User findByID(@PathVariable int id) {
 			return userRep.displayUser(id);
 		}

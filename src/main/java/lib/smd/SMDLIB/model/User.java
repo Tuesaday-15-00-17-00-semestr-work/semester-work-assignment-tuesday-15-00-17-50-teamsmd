@@ -1,5 +1,8 @@
 package lib.smd.SMDLIB.model;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public record User(
 		int user_id, 
 		String username, 

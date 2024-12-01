@@ -6,19 +6,22 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import Database.DatabaseConnection;
 import lib.smd.SMDLIB.SmdlibApplication;
 import lib.smd.SMDLIB.model.Transaction;
 
+@Repository
 public class TransactionRepo {
-private List<Transaction> transactions = new ArrayList<Transaction>();
+	private List<Transaction> transactions;
 	
 	private static final Logger log = LoggerFactory.getLogger(SmdlibApplication.class);
 	private static DatabaseConnection DBC;
 
 	//GET all transactions
-	public List<Transaction> displayTable() {	
+	public List<Transaction> displayTable() {
+		transactions = new ArrayList<Transaction>();
 		try {
             DBC.rs = DBC.statement.executeQuery("SELECT * FROM Borrows;");
 		    while(DBC.rs.next()) {		        
