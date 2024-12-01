@@ -22,5 +22,4 @@ public class SmdlibApplication {
 		log.info(DBC.connectToDB());
 		log.info("Server is UP!");
 	}
-
 }
