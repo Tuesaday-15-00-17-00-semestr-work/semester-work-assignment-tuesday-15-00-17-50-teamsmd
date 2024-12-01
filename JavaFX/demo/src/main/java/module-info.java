@@ -1,7 +1,8 @@
 module com.example.demo {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.net.http;  // Add this line to use the HTTP client module
 
-    opens com.example.library to javafx.fxml; // Allow reflection access for FXML
-    exports com.example.library;             // Exports library classes for external use
+    exports com.example.library;
+    opens com.example.library to javafx.fxml;
 }

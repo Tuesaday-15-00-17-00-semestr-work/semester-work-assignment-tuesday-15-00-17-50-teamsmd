@@ -62,7 +62,7 @@ public class MainApp extends Application {
 
         // Button actions
         homeButton.setOnAction(e -> loadHomeScreen(stage));
-        loginButton.setOnAction(e -> loadLoginScreen(stage));
+        loginButton.setOnAction(e -> loadLoginScreen(stage)); // Only pass MainApp to LoginScreen
         registerButton.setOnAction(e -> loadRegistrationScreen(stage));
         transactionButton.setOnAction(e -> loadTransactionHistoryScreen(stage));
         settingsButton.setOnAction(e -> loadAccountSettingsScreen(stage));
@@ -159,7 +159,7 @@ public class MainApp extends Application {
     }
 
     private void loadLoginScreen(Stage stage) {
-        LoginScreen loginScreen = new LoginScreen(this);
+        LoginScreen loginScreen = new LoginScreen(this);  // Pass only MainApp to LoginScreen
         loginScreen.start(stage);
     }
 
