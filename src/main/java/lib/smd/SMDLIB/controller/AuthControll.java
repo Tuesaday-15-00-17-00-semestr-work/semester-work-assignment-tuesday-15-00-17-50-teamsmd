@@ -29,13 +29,13 @@ public class AuthControll {
 		this.passEnc = passEnc;
 	}
 	
-	@PostMapping("register")
+	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody RegisterDto regdto){
 		UserEntity tstUser = userRep.returnUserByEmail(regdto.username);
-		if(tstUser == null) {
+		if(tstUser != null) {
 			return new ResponseEntity<>("User with that email already exists!",HttpStatus.BAD_REQUEST);
 		}
-		//doprogramovat pridanie usera
+		userRep.addUserToDB("adam", regdto.password, 2, regdto.username);
 		return new ResponseEntity<>("User registered!",HttpStatus.OK);
 	}
 }
