@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import lib.smd.SMDLIB.model.User;
+import lib.smd.SMDLIB.model.UserEntity;
 import lib.smd.SMDLIB.repo.UserRepo;
 
 @RestController
@@ -27,12 +27,12 @@ public class UserController {
 		}
 		
 		@GetMapping("/users")
-		List<User> findAllUsers(){
+		List<UserEntity> findAllUsers(){
 			return userRep.displayTable();
 		}
 		
 		@GetMapping("users/{id}")
-		User findByID(@PathVariable int id) {
+		UserEntity findByID(@PathVariable int id) {
 			return userRep.displayUser(id);
 		}
 		

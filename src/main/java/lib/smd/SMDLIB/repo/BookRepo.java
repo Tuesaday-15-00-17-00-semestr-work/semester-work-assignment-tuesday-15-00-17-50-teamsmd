@@ -13,7 +13,7 @@ import Database.DatabaseConnection;
 import jakarta.annotation.PostConstruct;
 import lib.smd.SMDLIB.SmdlibApplication;
 import lib.smd.SMDLIB.model.Book;
-import lib.smd.SMDLIB.model.User;
+import lib.smd.SMDLIB.model.UserEntity;
 
 @Repository
 public class BookRepo {

@@ -3,7 +3,7 @@ package lib.smd.SMDLIB.model;
 import jakarta.persistence.Entity;
 
 @Entity
-public record User(
+public record UserEntity(
 		int user_id, 
 		String username, 
 		String pass, 

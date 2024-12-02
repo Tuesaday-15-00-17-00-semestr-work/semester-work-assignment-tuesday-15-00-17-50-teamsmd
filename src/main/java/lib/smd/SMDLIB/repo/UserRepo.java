@@ -13,23 +13,23 @@ import org.springframework.stereotype.Repository;
 import Database.DatabaseConnection;
 import jakarta.annotation.PostConstruct;
 import lib.smd.SMDLIB.SmdlibApplication;
-import lib.smd.SMDLIB.model.User;
+import lib.smd.SMDLIB.model.UserEntity;
 
 @Repository
 public class UserRepo {
 	
-	private List<User> users;
+	private List<UserEntity> users;
 	
 	private static final Logger log = LoggerFactory.getLogger(SmdlibApplication.class);
 	private static DatabaseConnection DBC;
 	
 	//GET all users
-	public List<User> displayTable() {
-		users = new ArrayList<User>();
+	public List<UserEntity> displayTable() {
+		users = new ArrayList<UserEntity>();
 		try {
             DBC.rs = DBC.statement.executeQuery("SELECT * FROM Users;");
 		    while(DBC.rs.next()) {		        
-		        users.add(new User(DBC.rs.getInt("user_id"), DBC.rs.getString("username"),
+		        users.add(new UserEntity(DBC.rs.getInt("user_id"), DBC.rs.getString("username"),
 		        		DBC.rs.getString("password"), DBC.rs.getInt("role_id"), DBC.rs.getString("email")));
 		    }
 		    return users;
@@ -39,8 +39,29 @@ public class UserRepo {
 		return null;
 	}
 	
+	//GET users by 
+		public UserEntity returnUserByEmail(String email) {	
+			
+			String insertSQL = "SELECT * FROM Users WHERE email=?;";
+			
+			try {
+	            PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
+	            statement.setString(1, email);
+	            
+	            DBC.rs = statement.executeQuery();
+	            
+				UserEntity recUser =  new UserEntity(DBC.rs.getInt("user_id"), DBC.rs.getString("username"),
+		        		DBC.rs.getString("password"), DBC.rs.getInt("role_id"), DBC.rs.getString("email"));
+				
+			    return recUser;
+			}catch(SQLException e){
+				System.err.println("Error printing Users: "+e.getMessage());
+			}
+			return null;
+		}
+	
 	//GET users by id
-	public User displayUser(int id) {	
+	public UserEntity displayUser(int id) {	
 		
 		String insertSQL = "SELECT * FROM Users WHERE user_id=?;";
 		
@@ -50,7 +71,7 @@ public class UserRepo {
             
             DBC.rs = statement.executeQuery();
             
-			User recUser =  new User(DBC.rs.getInt("user_id"), DBC.rs.getString("username"),
+			UserEntity recUser =  new UserEntity(DBC.rs.getInt("user_id"), DBC.rs.getString("username"),
 	        		DBC.rs.getString("password"), DBC.rs.getInt("role_id"), DBC.rs.getString("email"));
 			
 		    return recUser;
