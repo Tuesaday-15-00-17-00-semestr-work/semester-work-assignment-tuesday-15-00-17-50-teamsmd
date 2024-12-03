@@ -3,6 +3,7 @@ package lib.smd.SMDLIB.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -30,7 +31,8 @@ public class SecurityConfig {
 	}
 	
 	@Bean
-	public SecurityFilterChain filterchain(HttpSecurity http) throws Exception{
+	@Order(1)
+	public SecurityFilterChain RegisterLogin(HttpSecurity http) throws Exception{
 		http
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(auth -> auth
@@ -42,14 +44,36 @@ public class SecurityConfig {
 		return http.build();
 	}
 	
-	/*@Bean
-	public UserDetailsService users() {
-		UserDetails admin = User.withUsername("admin").password("123").roles("ADMIN").build();
-		UserDetails user = User.withUsername("user").password("456").roles("USER").build();
-		return new InMemoryUserDetailsManager(admin, user);
-	}*/
+	@Bean
+	@Order(2)
+	public SecurityFilterChain AdminStuff(HttpSecurity http) throws Exception{
+		http
+			.csrf(AbstractHttpConfigurer::disable)
+			.authorizeHttpRequests(auth -> auth
+					//.requestMatchers("/admin/**").hasAuthority("ADMIN")
+					.anyRequest().authenticated()
+			)
+			.securityMatcher("/admin/**")
+			.httpBasic(Customizer.withDefaults());
+		
+		return http.build();
+	}
 	
-	@Bean //????????????????
+	@Bean
+	@Order(3)
+	public SecurityFilterChain UserStuff(HttpSecurity http) throws Exception{
+		http
+			.csrf(AbstractHttpConfigurer::disable)
+			.authorizeHttpRequests(auth -> auth
+					.anyRequest().authenticated()
+			)
+			.securityMatcher("/lib/**")
+			.httpBasic(Customizer.withDefaults());
+		
+		return http.build();
+	}
+	
+	@Bean
 	public AuthenticationManager authMang(AuthenticationConfiguration authconf) throws Exception{
 		return authconf.getAuthenticationManager();
 	}

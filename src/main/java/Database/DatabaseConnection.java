@@ -32,7 +32,7 @@ public class DatabaseConnection {
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS Users("
 								+ "user_id INTEGER PRIMARY KEY,"
 								+ "username TEXT NOT NULL,"
-								+ "password TEXT NOT NULL," //pridat hash
+								+ "password TEXT NOT NULL,"
 								+ "role_id INTEGER NOT NULL,"
 								+ "email TEXT NOT NULL,"
 								+ "FOREIGN KEY(role_id) REFERENCES Roles(role_id)"

@@ -55,9 +55,8 @@ public class UserRepo {
 				
 			    return recUser;
 			}catch(SQLException e){
-				System.err.println("Error printing Users: "+e.getMessage());
+				return null;
 			}
-			return null;
 		}
 	
 	//GET users by id
