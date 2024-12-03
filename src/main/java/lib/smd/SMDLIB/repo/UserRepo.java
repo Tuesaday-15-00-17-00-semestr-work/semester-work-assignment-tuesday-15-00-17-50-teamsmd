@@ -39,7 +39,7 @@ public class UserRepo {
 		return null;
 	}
 	
-	//GET users by 
+	//GET users by email
 		public UserEntity returnUserByEmail(String email) {	
 			
 			String insertSQL = "SELECT * FROM Users WHERE email=?;";

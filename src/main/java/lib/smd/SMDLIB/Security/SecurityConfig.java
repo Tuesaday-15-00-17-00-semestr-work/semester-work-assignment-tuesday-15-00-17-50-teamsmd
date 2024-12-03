@@ -58,4 +58,5 @@ public class SecurityConfig {
 	PasswordEncoder passEnc() {
 		return new BCryptPasswordEncoder();
 	}
+	
 }

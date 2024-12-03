@@ -32,10 +32,11 @@ public class AuthControll {
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody RegisterDto regdto){
 		UserEntity tstUser = userRep.returnUserByEmail(regdto.username);
+		System.out.println(tstUser);
 		if(tstUser != null) {
 			return new ResponseEntity<>("User with that email already exists!",HttpStatus.BAD_REQUEST);
 		}
-		userRep.addUserToDB("adam", regdto.password, 2, regdto.username);
+		userRep.addUserToDB(regdto.name, passEnc.encode(regdto.password), regdto.role, regdto.username);
 		return new ResponseEntity<>("User registered!",HttpStatus.OK);
 	}
 }

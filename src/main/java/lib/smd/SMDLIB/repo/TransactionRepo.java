@@ -57,6 +57,29 @@ public class TransactionRepo {
 		return null;
 	}
 	
+	//GET transaction by id
+	public List<Transaction> displayTransactionForUser(int user_id) {	
+			
+		String insertSQL = "SELECT * FROM Borrows WHERE user_id=?;";
+		transactions = new ArrayList<Transaction>();
+		try {
+			PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
+	        statement.setInt(1, user_id);
+	            
+	        DBC.rs = statement.executeQuery();
+			
+	        while(DBC.rs.next()) {		        
+		    	transactions.add(new Transaction(DBC.rs.getInt("transaction_id"), DBC.rs.getInt("user_id"),
+		        		DBC.rs.getInt("book_id"), DBC.rs.getString("action"), DBC.rs.getString("date")));
+		    }
+	        
+	        return transactions;
+		}catch(SQLException e){
+			System.err.println("Error printing Transaction: "+e.getMessage());
+		}
+		return null;
+	}
+	
 	//POST add transaction
 	public static void addTransActionToDB(int transaction_id, int user_id, int book_id, String action, String date){
 		String insertSQL = "INSERT INTO Borrows(transaction_id, user_id, book_id, action, date) VALUES(?,?,?,?,?);";
