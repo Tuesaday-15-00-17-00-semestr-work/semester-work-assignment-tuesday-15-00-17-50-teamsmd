@@ -20,7 +20,7 @@ public class DatabaseConnection {
 			return "Database connected!";
 
 		}catch(SQLException e) {
-			System.err.println(e.getMessage());
+			//System.err.println(e.getMessage());
 			return "SQLite connection failed: " + e;
 		}
 	}
@@ -33,10 +33,11 @@ public class DatabaseConnection {
 								+ "user_id INTEGER PRIMARY KEY,"
 								+ "username TEXT NOT NULL,"
 								+ "password TEXT NOT NULL,"
-								+ "role_id INTEGER NOT NULL,"
-								+ "email TEXT NOT NULL,"
-								+ "FOREIGN KEY(role_id) REFERENCES Roles(role_id)"
+								+ "role_id INTEGER DEFAULT 2,"
+								+ "email TEXT NOT NULL UNIQUE,"
+								+ "FOREIGN KEY(role_id) REFERENCES Roles(role_id)" //, CHECK(role_id BETWEEN 1 AND 2)
 								+ ");");
+			System.out.println("Table Users created!");
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 		}
@@ -47,10 +48,11 @@ public class DatabaseConnection {
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS Books("
 								+ "book_id INTEGER PRIMARY KEY,"
 								+ "title TEXT NOT NULL,"
-								+ "author TEXT NOT NULL,"
-								+ "isbn INTEGER NOT NULL,"
+								+ "author TEXT DEFAULT \"Unknown\","
+								+ "isbn INTEGER NOT NULL UNIQUE,"
 								+ "available_copies INTEGER NOT NULL"
 								+ ");");
+			System.out.println("Table Books created!");
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 		}
@@ -63,6 +65,7 @@ public class DatabaseConnection {
 								+ "role_name TEXT NOT NULL);");
 			statement.execute("INSERT INTO Roles(role_name) VALUES(\"Admin\")");
 			statement.execute("INSERT INTO Roles(role_name) VALUES(\"User\")");
+			System.out.println("Table Roles created!");
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 		}
@@ -80,6 +83,7 @@ public class DatabaseConnection {
 								+ "FOREIGN KEY(user_id) REFERENCES Users(user_id),"
 								+ "FOREIGN KEY(book_id) REFERENCES Books(book_id)"
 								+ ");");
+			System.out.println("Table Borrows created!");
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 		}

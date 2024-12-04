@@ -27,10 +27,12 @@ public class UserRepo {
 	public List<UserEntity> displayTable() {
 		users = new ArrayList<UserEntity>();
 		try {
-            DBC.rs = DBC.statement.executeQuery("SELECT * FROM Users;");
+            DBC.rs = DBC.statement.executeQuery("SELECT Users.user_id,"
+            		+ "Users.username, Users.password, Roles.role_name, Users.email FROM Users JOIN Roles "
+            		+ "ON (Users.role_id = Roles.role_id)");
 		    while(DBC.rs.next()) {		        
 		        users.add(new UserEntity(DBC.rs.getInt("user_id"), DBC.rs.getString("username"),
-		        		DBC.rs.getString("password"), DBC.rs.getInt("role_id"), DBC.rs.getString("email")));
+		        		DBC.rs.getString("password"), DBC.rs.getString("role_name"), DBC.rs.getString("email")));
 		    }
 		    return users;
 		}catch(SQLException e){
@@ -42,7 +44,9 @@ public class UserRepo {
 	//GET users by email
 		public UserEntity returnUserByEmail(String email) {	
 			
-			String insertSQL = "SELECT * FROM Users WHERE email=?;";
+			String insertSQL = "SELECT Users.user_id,"
+            		+ "Users.username, Users.password, Roles.role_name, Users.email FROM Users JOIN Roles "
+            		+ "ON (Users.role_id = Roles.role_id) WHERE email=?;";
 			
 			try {
 	            PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
@@ -51,7 +55,7 @@ public class UserRepo {
 	            DBC.rs = statement.executeQuery();
 	            
 				UserEntity recUser =  new UserEntity(DBC.rs.getInt("user_id"), DBC.rs.getString("username"),
-		        		DBC.rs.getString("password"), DBC.rs.getInt("role_id"), DBC.rs.getString("email"));
+		        		DBC.rs.getString("password"), DBC.rs.getString("role_name"), DBC.rs.getString("email"));
 				
 			    return recUser;
 			}catch(SQLException e){
@@ -62,7 +66,9 @@ public class UserRepo {
 	//GET users by id
 	public UserEntity displayUser(int id) {	
 		
-		String insertSQL = "SELECT * FROM Users WHERE user_id=?;";
+		String insertSQL = "SELECT Users.user_id,"
+        		+ "Users.username, Users.password, Roles.role_name, Users.email FROM Users JOIN Roles "
+        		+ "ON (Users.role_id = Roles.role_id) WHERE user_id=?;";
 		
 		try {
             PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
@@ -71,7 +77,7 @@ public class UserRepo {
             DBC.rs = statement.executeQuery();
             
 			UserEntity recUser =  new UserEntity(DBC.rs.getInt("user_id"), DBC.rs.getString("username"),
-	        		DBC.rs.getString("password"), DBC.rs.getInt("role_id"), DBC.rs.getString("email"));
+	        		DBC.rs.getString("password"), DBC.rs.getString("role_name"), DBC.rs.getString("email"));
 			
 		    return recUser;
 		}catch(SQLException e){

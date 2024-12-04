@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,20 +27,26 @@ public class UserController {
 			this.userRep = userRep;
 		}
 		
-		@GetMapping("/users")
+		@GetMapping("/users/all")
 		List<UserEntity> findAllUsers(){
 			return userRep.displayTable();
 		}
 		
-		@GetMapping("users/{id}")
+		@GetMapping("/users/{id}")
 		UserEntity findByID(@PathVariable int id) {
 			return userRep.displayUser(id);
 		}
 		
 		@ResponseStatus(HttpStatus.CREATED)
-		@PostMapping("")
+		@PostMapping("/users/add")
 		void createUser(@RequestBody String username, String password, int role, String email) {
 			userRep.addUserToDB(username, password, role, email);
+		}
+		
+		@ResponseStatus(HttpStatus.GONE)
+		@DeleteMapping("/admin/delete")
+		void deleteUser(@RequestBody int id) {
+			userRep.deleteUserFromDB(id);
 		}
 		
 }

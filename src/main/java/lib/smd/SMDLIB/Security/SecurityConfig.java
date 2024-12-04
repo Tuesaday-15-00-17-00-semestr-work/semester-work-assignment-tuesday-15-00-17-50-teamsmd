@@ -30,7 +30,7 @@ public class SecurityConfig {
 		this.userDetSer = userDetSer;
 	}
 	
-	@Bean
+	@Bean	//REGISTER and LOGIN
 	@Order(1)
 	public SecurityFilterChain RegisterLogin(HttpSecurity http) throws Exception{
 		http
@@ -44,22 +44,22 @@ public class SecurityConfig {
 		return http.build();
 	}
 	
-	@Bean
+	@Bean	//ADMIN
 	@Order(2)
 	public SecurityFilterChain AdminStuff(HttpSecurity http) throws Exception{
 		http
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(auth -> auth
-					//.requestMatchers("/admin/**").hasAuthority("ADMIN")
+					.requestMatchers("/**").hasRole("Admin")
 					.anyRequest().authenticated()
 			)
-			.securityMatcher("/admin/**")
+			.securityMatcher("/**")
 			.httpBasic(Customizer.withDefaults());
 		
 		return http.build();
 	}
 	
-	@Bean
+	@Bean	//USER
 	@Order(3)
 	public SecurityFilterChain UserStuff(HttpSecurity http) throws Exception{
 		http
@@ -67,7 +67,8 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 					.anyRequest().authenticated()
 			)
-			.securityMatcher("/lib/**")
+			.securityMatcher("/lib/transactions/user/**")
+			.securityMatcher("/lib/books/user/**")
 			.httpBasic(Customizer.withDefaults());
 		
 		return http.build();
