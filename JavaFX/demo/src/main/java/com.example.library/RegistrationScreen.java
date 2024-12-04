@@ -8,16 +8,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.BorderPane; // Make sure BorderPane is imported
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class RegistrationScreen {
 
     private MainApp mainApp; // Reference to MainApp
+    private AuthService authService;  // Authentication service
 
-    // Constructor - Make sure the reference to MainApp is passed
+    // Constructor
     public RegistrationScreen(MainApp mainApp) {
         this.mainApp = mainApp;
+        this.authService = new AuthService();  // Initialize the AuthService
     }
 
     public void start(Stage stage) {
@@ -25,7 +27,7 @@ public class RegistrationScreen {
         layout.setStyle("-fx-padding: 20;");
         layout.setAlignment(Pos.CENTER); // Center all elements
 
-        Label usernameLabel = new Label("Username:");
+        Label usernameLabel = new Label("Username (Email):");
         TextField usernameField = new TextField();
         usernameField.setPrefWidth(200); // Set preferred width
         usernameField.setMaxWidth(200);
@@ -64,8 +66,9 @@ public class RegistrationScreen {
             } else if (!email.contains("@") || !email.contains(".")) {
                 showError("Invalid email format.");
             } else {
-                // Placeholder registration logic (for now, just print to console)
-                showSuccess("User Registered: " + username);
+                // Call the registration method with role set to 1 (user)
+                String result = authService.register(username, password, username, email);
+                showSuccess(result);  // Show success message from the response
                 mainApp.loadHomeScreen(stage);  // Load home screen after successful registration
             }
         });

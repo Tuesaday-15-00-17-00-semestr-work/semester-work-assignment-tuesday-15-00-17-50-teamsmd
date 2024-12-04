@@ -21,8 +21,8 @@ import javafx.util.Duration;
 public class MainApp extends Application {
 
     private BorderPane borderPane = new BorderPane();  // Main layout for all screens
-    private TransactionManager transactionManager = new TransactionManager(); // Manage transactions
     private boolean isMenuCollapsed = false;  // Track the state of the menu (collapsed or expanded)
+    private TransactionManager transactionManager = new TransactionManager();  // Shared transaction manager
 
     @Override
     public void start(Stage stage) {
@@ -62,7 +62,7 @@ public class MainApp extends Application {
 
         // Button actions
         homeButton.setOnAction(e -> loadHomeScreen(stage));
-        loginButton.setOnAction(e -> loadLoginScreen(stage)); // Only pass MainApp to LoginScreen
+        loginButton.setOnAction(e -> loadLoginScreen(stage));
         registerButton.setOnAction(e -> loadRegistrationScreen(stage));
         transactionButton.setOnAction(e -> loadTransactionHistoryScreen(stage));
         settingsButton.setOnAction(e -> loadAccountSettingsScreen(stage));
@@ -134,19 +134,7 @@ public class MainApp extends Application {
                 new KeyFrame(Duration.millis(300), e -> sideMenu.setPrefWidth(targetWidth))
         );
         timeline.play();
-
-        // Hide or show button labels when collapsing/expanding the menu
-        for (javafx.scene.Node node : sideMenu.getChildren()) {
-            if (node instanceof Button) {
-                Button button = (Button) node;
-                Label label = (Label) button.getGraphic();  // Get the label inside the button
-                if (label != null) {
-                    label.setVisible(!isMenuCollapsed);  // Hide text when menu is collapsed
-                }
-            }
-        }
     }
-
 
     // Home screen
     public void loadHomeScreen(Stage stage) {

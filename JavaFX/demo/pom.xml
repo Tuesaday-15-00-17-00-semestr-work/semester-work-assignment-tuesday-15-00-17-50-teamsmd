@@ -15,17 +15,21 @@
     </properties>
 
     <dependencies>
+        <!-- JavaFX Controls -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>21</version>
         </dependency>
+
+        <!-- JavaFX FXML -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>21</version>
         </dependency>
 
+        <!-- JUnit for Testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -37,6 +41,12 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.10.5</version>
         </dependency>
     </dependencies>
 
@@ -57,10 +67,9 @@
                 <version>0.0.8</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.demo/com.example.demo.HelloApplication</mainClass>
+                            <mainClass>com.example.demo/com.example.library.MainApp</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

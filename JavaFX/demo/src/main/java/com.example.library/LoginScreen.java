@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 public class LoginScreen {
 
     private MainApp mainApp; // Reference to MainApp
+    private AuthService authService = new AuthService(); // Reference to AuthService
 
     // Constructor
     public LoginScreen(MainApp mainApp) {
@@ -42,17 +43,13 @@ public class LoginScreen {
             String username = usernameField.getText();
             String password = passwordField.getText();
 
-            // Validate input
-            if (username.isEmpty() || password.isEmpty()) {
-                showError("Both fields are required!");
+            // Call AuthService to perform login
+            String result = authService.login(username, password);
+            if (result.equals("User logged in!")) {
+                showSuccess(result);
+                mainApp.loadHomeScreen(stage);  // Load home screen on successful login
             } else {
-                // Placeholder login validation logic (for now, just print to console)
-                if ("admin".equals(username) && "password".equals(password)) {
-                    showSuccess("Login Successful");
-                    mainApp.loadHomeScreen(stage);  // Load home screen on successful login
-                } else {
-                    showError("Invalid credentials, please try again.");
-                }
+                showError(result);
             }
         });
 
