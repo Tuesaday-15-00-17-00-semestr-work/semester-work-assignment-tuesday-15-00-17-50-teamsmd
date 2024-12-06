@@ -22,7 +22,7 @@ public class AuthService {
                     + "\"username\":\"" + username + "\","
                     + "\"password\":\"" + password + "\","
                     + "\"name\":\"" + name + "\","
-                    + "\"role\":\"1\","  // Automatically set role to 1 (user)
+                    + "\"role\":\"2\","  // Automatically set role to 2 (user)
                     + "\"email\":\"" + email + "\""
                     + "}";
 

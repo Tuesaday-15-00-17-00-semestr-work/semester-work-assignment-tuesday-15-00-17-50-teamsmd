@@ -1,18 +1,14 @@
 package com.example.library;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.Arrays;
-
 public class BookLendingScreen {
 
-    private MainApp mainApp;
+    private MainApp mainApp;  // Reference to MainApp
     private BookService bookService = new BookService(); // Use BookService for API calls
 
     public BookLendingScreen(MainApp mainApp) {
@@ -30,6 +26,7 @@ public class BookLendingScreen {
         ListView<String> bookListView = new ListView<>();
         Button borrowButton = new Button("Borrow");
         Button backButton = new Button("Back");
+        Button addBookButton = new Button("Add New Book");
 
         // Fetch available books
         fetchAvailableBooks(bookListView);
@@ -53,20 +50,25 @@ public class BookLendingScreen {
         // Back action
         backButton.setOnAction(e -> mainApp.loadHomeScreen(stage));
 
-        layout.getChildren().addAll(titleLabel, bookListView, borrowButton, backButton);
+        // Add new book action
+        addBookButton.setOnAction(e -> showAddBookPopup(stage));
+
+        layout.getChildren().addAll(titleLabel, bookListView, borrowButton, addBookButton, backButton);
         mainApp.getBorderPane().setCenter(layout);
     }
 
+    // Fetch available books from backend
     private void fetchAvailableBooks(ListView<String> bookListView) {
         String response = bookService.fetchAllBooks();
         if (!response.equals("[]")) {
             String[] books = response.replace("[", "").replace("]", "").replace("\"", "").split(",");
-            bookListView.getItems().addAll(Arrays.asList(books));
+            bookListView.getItems().addAll(books);
         } else {
             showError("Failed to fetch books or no books available.");
         }
     }
 
+    // Show error message
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -75,11 +77,57 @@ public class BookLendingScreen {
         alert.showAndWait();
     }
 
+    // Show success message
     private void showSuccess(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    // Show popup for adding a new book
+    private void showAddBookPopup(Stage stage) {
+        VBox addBookLayout = new VBox(10);
+        addBookLayout.setStyle("-fx-padding: 20;");
+        addBookLayout.setAlignment(Pos.CENTER);
+
+        Label titleLabel = new Label("Add New Book");
+        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        Label nameLabel = new Label("Book Title:");
+        TextField titleField = new TextField();
+        titleField.setPromptText("Enter book title");
+
+        Label authorLabel = new Label("Author:");
+        TextField authorField = new TextField();
+        authorField.setPromptText("Enter author's name");
+
+        Button submitButton = new Button("Add Book");
+        submitButton.setOnAction(e -> {
+            String title = titleField.getText();
+            String author = authorField.getText();
+            if (title.isEmpty() || author.isEmpty()) {
+                showError("All fields must be filled!");
+            } else {
+                boolean success = bookService.addBook(title, author);
+                if (success) {
+                    showSuccess("Book added successfully!");
+                    stage.close();  // Close the add book popup
+                } else {
+                    showError("Failed to add book. Please try again.");
+                }
+            }
+        });
+
+
+        addBookLayout.getChildren().addAll(titleLabel, nameLabel, titleField, authorLabel, authorField, submitButton);
+
+        // Create a scene and show the popup window
+        Scene addBookScene = new Scene(addBookLayout, 300, 250);
+        Stage addBookStage = new Stage();
+        addBookStage.setScene(addBookScene);
+        addBookStage.setTitle("Add New Book");
+        addBookStage.show();
     }
 }
