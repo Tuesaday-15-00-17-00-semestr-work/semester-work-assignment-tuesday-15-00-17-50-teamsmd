@@ -86,7 +86,6 @@ public class BookLendingScreen {
         alert.showAndWait();
     }
 
-    // Show popup for adding a new book
     private void showAddBookPopup(Stage stage) {
         VBox addBookLayout = new VBox(10);
         addBookLayout.setStyle("-fx-padding: 20;");
@@ -110,7 +109,9 @@ public class BookLendingScreen {
             if (title.isEmpty() || author.isEmpty()) {
                 showError("All fields must be filled!");
             } else {
+                // Automatically set ISBN to 0 and available copies to 1
                 boolean success = bookService.addBook(title, author);
+
                 if (success) {
                     showSuccess("Book added successfully!");
                     stage.close();  // Close the add book popup
@@ -119,7 +120,6 @@ public class BookLendingScreen {
                 }
             }
         });
-
 
         addBookLayout.getChildren().addAll(titleLabel, nameLabel, titleField, authorLabel, authorField, submitButton);
 

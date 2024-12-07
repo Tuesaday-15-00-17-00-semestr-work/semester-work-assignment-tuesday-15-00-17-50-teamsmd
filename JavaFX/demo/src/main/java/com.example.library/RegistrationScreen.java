@@ -27,7 +27,7 @@ public class RegistrationScreen {
         layout.setStyle("-fx-padding: 20;");
         layout.setAlignment(Pos.CENTER); // Center all elements
 
-        Label usernameLabel = new Label("Username (Email):");
+        Label usernameLabel = new Label("Username:");
         TextField usernameField = new TextField();
         usernameField.setPrefWidth(200); // Set preferred width
         usernameField.setMaxWidth(200);

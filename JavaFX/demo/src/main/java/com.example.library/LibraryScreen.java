@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class LibraryScreen {
 
-    private MainApp mainApp; // Reference to MainApp
+    private MainApp mainApp;
 
     // Constructor
     public LibraryScreen(MainApp mainApp) {
@@ -22,27 +22,18 @@ public class LibraryScreen {
         layout.setStyle("-fx-padding: 20;");
         layout.setAlignment(Pos.CENTER);
 
-        // Title Label
         Label titleLabel = new Label("Your Borrowed Books");
         titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
-        // Add New Book button
         Button addBookButton = new Button("Add New Book");
         addBookButton.setOnAction(e -> openAddBookPopup(stage));
 
-        // You can add borrowedBooksListView and other controls here
-
-        // Adding buttons to the layout
         layout.getChildren().addAll(titleLabel, addBookButton);
-
-        // Set the content in the main window
         mainApp.getBorderPane().setCenter(layout);
     }
 
-    // Function to open the popup for adding a new book
     private void openAddBookPopup(Stage stage) {
-        // Create a new Stage for the Add Book popup
-        AddBookPopup addBookPopup = new AddBookPopup(mainApp);  // Pass mainApp to handle book adding
+        AddBookPopup addBookPopup = new AddBookPopup(mainApp);
         addBookPopup.showPopup(stage);  // Open the popup
     }
 

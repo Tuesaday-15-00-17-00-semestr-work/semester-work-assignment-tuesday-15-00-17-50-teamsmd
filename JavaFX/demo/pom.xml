@@ -43,11 +43,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Jackson Datatype for JSR310 -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.10.5</version>
         </dependency>
+
+
     </dependencies>
 
     <build>

@@ -41,11 +41,17 @@ public class BookService {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_URL + "/borrow")) // Endpoint for borrowing a book
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + AuthService.getToken())  // Pass the token in header
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // Log the response status and body for debugging
+            System.out.println("Response Status Code: " + response.statusCode());
+            System.out.println("Response Body: " + response.body());
+
             return response.statusCode() == 201; // Check if the status code is 201 (created)
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,30 +62,35 @@ public class BookService {
     // Add a new book (used by frontend to send book details)
     public boolean addBook(String title, String author) {
         try {
-            String requestBody = "{\"title\": \"" + title + "\", \"author\": \"" + author + "\", \"isbn\": 1234567890, \"available_copies\": 10}";
+            String token = AuthService.getToken();
 
-            // Assuming you need an Authorization header (e.g., Bearer token)
-            String token = "your-auth-token-here";  // Replace with your actual token
+            // Print the token to verify it
+            System.out.println("Using token: " + token);
+
+            String requestBody = String.format(
+                    "{\"title\": \"%s\", \"author\": \"%s\", \"isbn\": 0, \"available_copies\": 1}",
+                    title, author
+            );
+
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_URL + "/admin/addbook"))
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + token)  // Add token if required
+                    .header("Authorization", "Bearer " + AuthService.getToken())  // Pass the token in header
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
+
+            // Print the request headers for debugging
+            System.out.println("Request Headers: " + request.headers());
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // Log the response for debugging
             System.out.println("Response Status Code: " + response.statusCode());
             System.out.println("Response Body: " + response.body());
 
-            // Check if the status code is 201 (Created)
-            return response.statusCode() == 201;  // Success
+            return response.statusCode() == 201; // Return true if book added successfully
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
-
-
 }
