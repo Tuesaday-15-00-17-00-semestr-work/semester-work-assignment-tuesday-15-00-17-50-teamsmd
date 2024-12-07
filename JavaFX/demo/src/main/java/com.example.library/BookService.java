@@ -7,7 +7,7 @@ import java.net.http.HttpResponse;
 
 public class BookService {
 
-    private static final String BASE_URL = "http://localhost:8080/lib/books";  // Backend URL
+    private static final String BASE_URL = "http://localhost:8080/lib/books"; // Backend URL
 
     private final HttpClient client;
 
@@ -19,7 +19,7 @@ public class BookService {
     public String fetchAllBooks() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/user/all"))  // Use the correct endpoint for fetching books
+                    .uri(URI.create(BASE_URL + "/user/all")) // Use the correct endpoint for fetching books
                     .GET()
                     .build();
 
@@ -35,35 +35,36 @@ public class BookService {
     public boolean borrowBook(String bookTitle) {
         try {
             String requestBody = String.format(
-                    "{\"title\": \"%s\"}",  // Send the title of the book
+                    "{\"title\": \"%s\"}", // Send the title of the book
                     bookTitle
             );
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/borrow"))  // Endpoint for borrowing a book
+                    .uri(URI.create(BASE_URL + "/borrow")) // Endpoint for borrowing a book
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .header("Content-Type", "application/json")
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.statusCode() == 201;  // Check if the status code is 201 (created)
+            return response.statusCode() == 201; // Check if the status code is 201 (created)
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
+    // Add a new book (used by frontend to send book details)
     public boolean addBook(String title, String author) {
         try {
-            String requestBody = String.format(
-                    "{\"title\": \"%s\", \"author\": \"%s\", \"isbn\": 0, \"available_copies\": 1}",
-                    title, author
-            );
+            String requestBody = "{\"title\": \"" + title + "\", \"author\": \"" + author + "\", \"isbn\": 1234567890, \"available_copies\": 10}";
 
+            // Assuming you need an Authorization header (e.g., Bearer token)
+            String token = "your-auth-token-here";  // Replace with your actual token
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_URL + "/admin/addbook"))
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + token)  // Add token if required
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -73,17 +74,12 @@ public class BookService {
             System.out.println("Response Body: " + response.body());
 
             // Check if the status code is 201 (Created)
-            if (response.statusCode() == 201) {
-                return true;  // Success
-            } else {
-                // If it's not 201, show the error message
-                System.err.println("Error: " + response.body());
-                return false;  // Failure
-            }
+            return response.statusCode() == 201;  // Success
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+
 
 }

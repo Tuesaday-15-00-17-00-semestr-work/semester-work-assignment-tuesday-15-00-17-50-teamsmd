@@ -21,7 +21,7 @@ public class AddBookPopup {
     public void showPopup(Stage ownerStage) {
         // Create the popup stage
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL);  // Ensures that the popup is modal (can't interact with main window)
+        popupStage.initModality(Modality.APPLICATION_MODAL);  // Ensures that the popup is modal
         popupStage.initOwner(ownerStage);  // Makes sure that the main window stays in the background
 
         // Layout for the popup
@@ -42,11 +42,23 @@ public class AddBookPopup {
         TextField authorField = new TextField();
         authorField.setPrefWidth(200);
 
+        // ISBN Field (new input)
+        Label isbnLabel = new Label("ISBN:");
+        TextField isbnField = new TextField();
+        isbnField.setPrefWidth(200);
+
+        // Available Copies Field (new input)
+        Label availableCopiesLabel = new Label("Available Copies:");
+        TextField availableCopiesField = new TextField();
+        availableCopiesField.setPrefWidth(200);
+
         // Add Book button
         Button addButton = new Button("Add Book");
         addButton.setOnAction(e -> {
             String bookName = nameField.getText();
             String author = authorField.getText();
+            int isbn = Integer.parseInt(isbnField.getText()); // Get ISBN value
+            int availableCopies = Integer.parseInt(availableCopiesField.getText()); // Get available copies
 
             // Logic to add the book
             boolean success = mainApp.getBookService().addBook(bookName, author);
@@ -60,10 +72,11 @@ public class AddBookPopup {
         });
 
         // Adding elements to the layout
-        popupLayout.getChildren().addAll(popupLabel, nameLabel, nameField, authorLabel, authorField, addButton);
+        popupLayout.getChildren().addAll(popupLabel, nameLabel, nameField, authorLabel, authorField,
+                isbnLabel, isbnField, availableCopiesLabel, availableCopiesField, addButton);
 
         // Set the scene for the popup
-        Scene popupScene = new Scene(popupLayout, 300, 200);
+        Scene popupScene = new Scene(popupLayout, 300, 300);
         popupStage.setTitle("Add New Book");
         popupStage.setScene(popupScene);
         popupStage.show();  // Show the popup window
