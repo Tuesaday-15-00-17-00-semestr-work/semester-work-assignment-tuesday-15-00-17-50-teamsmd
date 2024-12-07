@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import lib.smd.SMDLIB.Dto.TransD.TransDelD;
+import lib.smd.SMDLIB.Dto.TransD.TransDto;
 import lib.smd.SMDLIB.model.Transaction;
 import lib.smd.SMDLIB.repo.TransactionRepo;
 
@@ -26,6 +27,7 @@ public class TransactionController {
 		this.transRep = transRep;
 	}
 	
+//--------------------------------------GET----------------------------------------|
 	@GetMapping("/admin/all")
 	List<Transaction> findAllTransactions(){
 		return transRep.displayTable();
@@ -40,17 +42,20 @@ public class TransactionController {
 	List<Transaction> findTransactionForUser(@PathVariable int user){
 		return transRep.displayTransactionForUser(user);
 	}
-	
-	//after this you have to make a request for UPDATE bookcount
+
+//--------------------------------------POST----------------------------------------|
+	//before this you have to make a request for PUT bookcount
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/user/addtrans")
-	void createTransaction(@RequestBody int transaction_id, int user_id, int book_id, String action, String date) {
-		transRep.addTransActionToDB(transaction_id, user_id, book_id, action, date);
+	void createTransaction(@RequestBody TransDto jsonTrans) {
+		transRep.addTransActionToDB(jsonTrans.transaction_id, jsonTrans.user_id, 
+				jsonTrans.book_id, jsonTrans.action, jsonTrans.date);
 	}
 	
+//--------------------------------------DELETE----------------------------------------|
 	@ResponseStatus(HttpStatus.GONE)
 	@DeleteMapping("/admin/deletetrans")
-	void deleteTransaction(@RequestBody int transaction_id) {
-		transRep.deleteTransFromDB(transaction_id);
+	void deleteTransaction(@RequestBody TransDelD jsonTransDel) {
+		transRep.deleteTransFromDB(jsonTransDel.id);
 	}
 }

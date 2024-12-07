@@ -44,23 +44,8 @@ public class SecurityConfig {
 		return http.build();
 	}
 	
-	@Bean	//ADMIN
-	@Order(2)
-	public SecurityFilterChain AdminStuff(HttpSecurity http) throws Exception{
-		http
-			.csrf(AbstractHttpConfigurer::disable)
-			.authorizeHttpRequests(auth -> auth
-					.requestMatchers("/**").hasRole("Admin")
-					.anyRequest().authenticated()
-			)
-			.securityMatcher("/**")
-			.httpBasic(Customizer.withDefaults());
-		
-		return http.build();
-	}
-	
 	@Bean	//USER
-	@Order(3)
+	@Order(2)
 	public SecurityFilterChain UserStuff(HttpSecurity http) throws Exception{
 		http
 			.csrf(AbstractHttpConfigurer::disable)
@@ -69,6 +54,21 @@ public class SecurityConfig {
 			)
 			.securityMatcher("/lib/transactions/user/**")
 			.securityMatcher("/lib/books/user/**")
+			.httpBasic(Customizer.withDefaults());
+		
+		return http.build();
+	}
+	
+	@Bean	//ADMIN
+	@Order(3)
+	public SecurityFilterChain AdminStuff(HttpSecurity http) throws Exception{
+		http
+			.csrf(AbstractHttpConfigurer::disable)
+			.authorizeHttpRequests(auth -> auth
+					.requestMatchers("/**").hasRole("Admin")
+					.anyRequest().authenticated()
+			)
+			.securityMatcher("/**")
 			.httpBasic(Customizer.withDefaults());
 		
 		return http.build();

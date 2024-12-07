@@ -1,8 +1,6 @@
 package Database;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseConnection {
 	public static ResultSet rs;
@@ -20,7 +18,6 @@ public class DatabaseConnection {
 			return "Database connected!";
 
 		}catch(SQLException e) {
-			//System.err.println(e.getMessage());
 			return "SQLite connection failed: " + e;
 		}
 	}
@@ -43,7 +40,7 @@ public class DatabaseConnection {
 		}
 	}
 	
-	public static void createTableBooks() {
+	private static void createTableBooks() {
 		try {
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS Books("
 								+ "book_id INTEGER PRIMARY KEY,"
@@ -89,7 +86,6 @@ public class DatabaseConnection {
 		}
 	}
 	
-	//ONLY FOR TESTING
 	private static void dropTable(String tableName) {		
 		try {	
 			

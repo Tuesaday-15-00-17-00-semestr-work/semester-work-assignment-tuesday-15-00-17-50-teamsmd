@@ -1,4 +1,4 @@
-package lib.smd.SMDLIB.Dto;
+package lib.smd.SMDLIB.Dto.AuthD;
 
 public class RegisterDto {
 	public String name;

@@ -7,11 +7,9 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 import Database.DatabaseConnection;
-import jakarta.annotation.PostConstruct;
 import lib.smd.SMDLIB.SmdlibApplication;
 import lib.smd.SMDLIB.model.UserEntity;
 
@@ -22,8 +20,8 @@ public class UserRepo {
 	
 	private static final Logger log = LoggerFactory.getLogger(SmdlibApplication.class);
 	private static DatabaseConnection DBC;
-	
-	//GET all users
+
+//--------------------------------------GET all users----------------------------------------------------|
 	public List<UserEntity> displayTable() {
 		users = new ArrayList<UserEntity>();
 		try {
@@ -36,12 +34,12 @@ public class UserRepo {
 		    }
 		    return users;
 		}catch(SQLException e){
-			System.err.println("Error printing Users table: "+e.getMessage());
+			log.info("Error printing Users table: "+e.getMessage());
 		}
 		return null;
 	}
 	
-	//GET users by email
+//--------------------------------------GET users by email----------------------------------------------------|
 		public UserEntity returnUserByEmail(String email) {	
 			
 			String insertSQL = "SELECT Users.user_id,"
@@ -59,11 +57,11 @@ public class UserRepo {
 				
 			    return recUser;
 			}catch(SQLException e){
+				log.info("User "+ email +" exists!");
 				return null;
 			}
 		}
-	
-	//GET users by id
+//--------------------------------------GET users by id----------------------------------------------------|	
 	public UserEntity displayUser(int id) {	
 		
 		String insertSQL = "SELECT Users.user_id,"
@@ -81,17 +79,15 @@ public class UserRepo {
 			
 		    return recUser;
 		}catch(SQLException e){
-			System.err.println("Error printing Users: "+e.getMessage());
+			log.info("Error printing Users: "+e.getMessage());
 		}
 		return null;
 	}
-	
-	//POST add user
-	public static void addUserToDB(String username, String password, int role, String email){
+//--------------------------------------POST add user----------------------------------------------------|	
+	public void addUserToDB(String username, String password, int role, String email){
 		String insertSQL = "INSERT INTO Users(username, password, role_id, email) VALUES(?,?,?,?);";
 		
-		try {	
-			
+		try {			
             PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
             statement.setString(1, username);
             statement.setString(2, password);
@@ -101,24 +97,23 @@ public class UserRepo {
 			statement.executeUpdate();
 			log.info("User " +username+" added!");
 		}catch(SQLException e){
-			System.err.println(e.getMessage());
+			log.info("Error adding user: "+e.getMessage());
 		}
 	}
 	
-	//DELETE delete user
-	public static void deleteUserFromDB(int id){
+//--------------------------------------DELETE delete user----------------------------------------------------|
+	public void deleteUserFromDB(int id){
 		
 		String insertSQL = "DELETE FROM Users WHERE user_id=?;";
 		
-		try {	
-			
+		try {			
             PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
             statement.setInt(1, id);
 			
 			statement.executeUpdate();
-			log.info("User removed!");
+			log.info("User "+ id +" removed!");
 		}catch(SQLException e){
-			System.err.println(e.getMessage());
+			log.info("Error deleting user: "+e.getMessage());
 		}
 	}
 }

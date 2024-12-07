@@ -1,8 +1,6 @@
-package lib.smd.SMDLIB.Dto;
+package lib.smd.SMDLIB.Dto.AuthD;
 
 public class LoginDto {
-	public String name;
 	public String username;
 	public String password;
-	public int role;
 }

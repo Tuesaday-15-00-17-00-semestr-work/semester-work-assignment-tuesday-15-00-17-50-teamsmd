@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import Database.DatabaseConnection;
 import lib.smd.SMDLIB.SmdlibApplication;
 import lib.smd.SMDLIB.model.Transaction;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class TransactionRepo {
@@ -20,9 +19,10 @@ public class TransactionRepo {
 	private static final Logger log = LoggerFactory.getLogger(SmdlibApplication.class);
 	private static DatabaseConnection DBC;
 
-	//GET all transactions
+//--------------------------------------GET all transactions----------------------------------------------|
 	public List<Transaction> displayTable() {
 		transactions = new ArrayList<Transaction>();
+		
 		try {
             DBC.rs = DBC.statement.executeQuery("SELECT * FROM Borrows;");
 		    while(DBC.rs.next()) {		        
@@ -31,12 +31,12 @@ public class TransactionRepo {
 		    }
 		    return transactions;
 		}catch(SQLException e){
-			System.err.println("Error printing Transaction table: "+e.getMessage());
+			log.info("Error printing Transaction table: "+e.getMessage());
 		}
 		return null;
 	}
 	
-	//GET transaction by id
+//--------------------------------------GET transaction by id----------------------------------------------|
 	public Transaction displayTransaction(int id) {	
 		
 		String insertSQL = "SELECT * FROM Borrows WHERE transaction_id=?;";
@@ -52,16 +52,17 @@ public class TransactionRepo {
 			
 		    return recTrans;
 		}catch(SQLException e){
-			System.err.println("Error printing Transaction: "+e.getMessage());
+			log.info("Error printing Transaction: "+e.getMessage());
 		}
 		return null;
 	}
 	
-	//GET transaction by id
+//--------------------------------------GET transactions for user------------------------------------------|
 	public List<Transaction> displayTransactionForUser(int user_id) {	
 			
 		String insertSQL = "SELECT * FROM Borrows WHERE user_id=?;";
 		transactions = new ArrayList<Transaction>();
+		
 		try {
 			PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
 	        statement.setInt(1, user_id);
@@ -75,17 +76,16 @@ public class TransactionRepo {
 	        
 	        return transactions;
 		}catch(SQLException e){
-			System.err.println("Error printing Transaction: "+e.getMessage());
+			log.info("Error printing Transaction: "+e.getMessage());
 		}
 		return null;
 	}
 	
-	//POST add transaction
-	public static void addTransActionToDB(int transaction_id, int user_id, int book_id, String action, String date){
+//--------------------------------------POST add transaction-----------------------------------------------|
+	public void addTransActionToDB(int transaction_id, int user_id, int book_id, String action, String date){
 		String insertSQL = "INSERT INTO Borrows(transaction_id, user_id, book_id, action, date) VALUES(?,?,?,?,?);";
 		
-		try {	
-			
+		try {				
             PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
             statement.setInt(1, transaction_id);
             statement.setInt(2, user_id);
@@ -94,26 +94,25 @@ public class TransactionRepo {
             statement.setString(5, date);
             
 			statement.executeUpdate();
-			System.out.println("Transaction number " +transaction_id+" added!");
+			log.info("Transaction number: " +transaction_id+" added!");
 		}catch(SQLException e){
-			System.err.println(e.getMessage());
+			log.info("Error adding transaction: "+e.getMessage());
 		}
 	}
-	
-	//DELETE delete transaction
-	public static void deleteTransFromDB(int id){
+
+//--------------------------------------DELETE delete transaction-----------------------------------------|
+	public void deleteTransFromDB(int id){
 		
 		String insertSQL = "DELETE FROM Borrows WHERE transaction_id=?;";
 		
-		try {	
-			
+		try {		
             PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
             statement.setInt(1, id);
 			
 			statement.executeUpdate();
-			System.out.println("Transaction removed!");
+			log.info("Transaction number: "+ id +" removed!");
 		}catch(SQLException e){
-			System.err.println(e.getMessage());
+			log.info("Error delete transaction: "+e.getMessage());
 		}
 	}
 }
