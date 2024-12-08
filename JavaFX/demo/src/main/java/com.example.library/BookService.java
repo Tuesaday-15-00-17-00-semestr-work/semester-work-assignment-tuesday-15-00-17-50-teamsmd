@@ -20,6 +20,7 @@ public class BookService {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_URL + "/user/all")) // Use the correct endpoint for fetching books
+                    .header("Authorization", "Bearer " + AuthService.getToken())  // Pass the token in header
                     .GET()
                     .build();
 
