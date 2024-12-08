@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,12 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 	
-	/*private JWTAuthEntry JWTentry;
-	
 	@Autowired
-	public SecurityConfig(JWTAuthEntry JWTentry) {
-		this.JWTentry = JWTentry;
-	}*/
+	private JwtFilter jwtFilter;
 	
 	@Bean	//REGISTER and LOGIN
 	@Order(1)
@@ -46,9 +43,6 @@ public class SecurityConfig {
 	public SecurityFilterChain UserStuff(HttpSecurity http) throws Exception{
 		http
 			.csrf(AbstractHttpConfigurer::disable)
-			/*.exceptionHandling((exception) -> exception
-					.authenticationEntryPoint(JWTentry)
-			)*/
 			.authorizeHttpRequests(auth -> auth
 					.anyRequest().authenticated()
 			)
@@ -57,8 +51,7 @@ public class SecurityConfig {
 			)
 			.securityMatcher("/lib/transactions/user/**")
 			.securityMatcher("/lib/books/user/**")
-			.httpBasic(Customizer.withDefaults());
-		http.addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
 	
@@ -67,9 +60,6 @@ public class SecurityConfig {
 	public SecurityFilterChain AdminStuff(HttpSecurity http) throws Exception{
 		http
 			.csrf(AbstractHttpConfigurer::disable)
-			/*.exceptionHandling((exception) -> exception
-					.authenticationEntryPoint(JWTentry)
-			)*/
 			.authorizeHttpRequests(auth -> auth
 					.requestMatchers("/**").hasRole("Admin")
 					.anyRequest().authenticated()
@@ -78,8 +68,7 @@ public class SecurityConfig {
 					.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 			.securityMatcher("/**")
-			.httpBasic(Customizer.withDefaults());
-		http.addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
 	
@@ -91,11 +80,6 @@ public class SecurityConfig {
 	@Bean
 	PasswordEncoder passEnc() {
 		return new BCryptPasswordEncoder();
-	}
-	
-	@Bean
-	public JWTFilter jwtAuthFilter() {
-		return new JWTFilter();
 	}
 	
 }

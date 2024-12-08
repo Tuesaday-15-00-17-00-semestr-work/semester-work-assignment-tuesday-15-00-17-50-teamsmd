@@ -1,5 +1,7 @@
 package lib.smd.SMDLIB.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lib.smd.SMDLIB.Dto.AuthD.JWTResponseDto;
+import lib.smd.SMDLIB.SmdlibApplication;
 import lib.smd.SMDLIB.Dto.AuthD.LoginDto;
 import lib.smd.SMDLIB.Dto.AuthD.RegisterDto;
-import lib.smd.SMDLIB.Security.JTWGenerator;
+import lib.smd.SMDLIB.Security.UserService;
 import lib.smd.SMDLIB.model.UserEntity;
 import lib.smd.SMDLIB.repo.UserRepo;
 
@@ -27,27 +29,24 @@ public class AuthControll {
 	private AuthenticationManager authMan;
 	private UserRepo userRep;
 	private PasswordEncoder passEnc;
-	private JTWGenerator tokgen;
+	private UserService ser;
+	
+	private static final Logger log = LoggerFactory.getLogger(SmdlibApplication.class);
 	
 	@Autowired
-	public AuthControll(AuthenticationManager authMan, UserRepo userRep, PasswordEncoder passEnc, JTWGenerator tokgen) {
+	public AuthControll(AuthenticationManager authMan, UserRepo userRep, PasswordEncoder passEnc, UserService ser) {
 		this.authMan = authMan;
 		this.userRep = userRep;
 		this.passEnc = passEnc;
-		this.tokgen = tokgen;
+		this.ser = ser;
 	}
 
 //--------------------------------------LOGIN----------------------------------------|
 	@PostMapping("/login")
-	public ResponseEntity<JWTResponseDto> login(@RequestBody LoginDto logdto){
-		Authentication authentication = authMan.authenticate(
-				new UsernamePasswordAuthenticationToken(logdto.username, logdto.password));
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String token = tokgen.generateToken(authentication);
-		System.out.println(token);
-		return new ResponseEntity<>(new JWTResponseDto(token),HttpStatus.OK);
+	public String login(@RequestBody LoginDto logdto){
+		log.info("User " + logdto.username + " logged in!");
+		return ser.verify(logdto);
 	}
-	
 //-------------------------------------REGISTER--------------------------------------|
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody RegisterDto regdto){
