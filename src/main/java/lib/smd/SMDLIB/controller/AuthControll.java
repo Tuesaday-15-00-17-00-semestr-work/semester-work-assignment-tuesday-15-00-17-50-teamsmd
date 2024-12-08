@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lib.smd.SMDLIB.Dto.AuthD.JWTResponseDto;
 import lib.smd.SMDLIB.Dto.AuthD.LoginDto;
 import lib.smd.SMDLIB.Dto.AuthD.RegisterDto;
+import lib.smd.SMDLIB.Security.JTWGenerator;
 import lib.smd.SMDLIB.model.UserEntity;
 import lib.smd.SMDLIB.repo.UserRepo;
 
@@ -25,21 +27,25 @@ public class AuthControll {
 	private AuthenticationManager authMan;
 	private UserRepo userRep;
 	private PasswordEncoder passEnc;
+	private JTWGenerator tokgen;
 	
 	@Autowired
-	public AuthControll(AuthenticationManager authMan, UserRepo userRep, PasswordEncoder passEnc) {
+	public AuthControll(AuthenticationManager authMan, UserRepo userRep, PasswordEncoder passEnc, JTWGenerator tokgen) {
 		this.authMan = authMan;
 		this.userRep = userRep;
 		this.passEnc = passEnc;
+		this.tokgen = tokgen;
 	}
 
 //--------------------------------------LOGIN----------------------------------------|
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody LoginDto logdto){
+	public ResponseEntity<JWTResponseDto> login(@RequestBody LoginDto logdto){
 		Authentication authentication = authMan.authenticate(
 				new UsernamePasswordAuthenticationToken(logdto.username, logdto.password));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		return new ResponseEntity<>("User logged in!",HttpStatus.OK);
+		String token = tokgen.generateToken(authentication);
+		System.out.println(token);
+		return new ResponseEntity<>(new JWTResponseDto(token),HttpStatus.OK);
 	}
 	
 //-------------------------------------REGISTER--------------------------------------|

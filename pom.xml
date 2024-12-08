@@ -36,7 +36,20 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<!-- JWT-->
+		<dependency>
+    		<groupId>io.jsonwebtoken</groupId>
+   			<artifactId>jjwt</artifactId>
+    		<version>0.12.6</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>io.jsonwebtoken</groupId>
+    		<artifactId>jjwt-impl</artifactId>
+    		<version>0.12.6</version>
+    		<scope>runtime</scope>
+		</dependency>
+		
 		<!-- Login and Register-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -48,13 +61,13 @@
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 
-		<!-- SQLite JPA dependency-->
+		<!-- SQLite JDBC dependency-->
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.25.2</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-community-dialects</artifactId>
