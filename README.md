@@ -12,7 +12,7 @@ Everything is done through understandable client UI and effective and safe serve
 
 ## Technology Stack:
 In our project, we have 3 layers with RESTfulAPI between the first 2:
-1. **JavaFX client** - dopis
+1. **JavaFX client** - is the front-end interface of the application that allows users to interact with the Library Management System
 2. **Spring Boot** - server side Java framework for proccessing requests and security
 3. **SQLite database** - to be specific, we choose SQLite3 and it is not a in-memory database, so after server restart we won't loose our stored data
 
@@ -74,7 +74,26 @@ We have 4 tables to work with:
 **Roles**: A help table to more easily determine who is the admin and who is the user
 ![roles picture](./images/ROLES.PNG)
 
-## User Interface: to si dopln
+## User Interface: 
+The User Interface (UI) of the SMDLIB Simple Library Management System is developed using JavaFX,
+providing an intuitive and interactive experience for users. 
+The UI is designed to be simple, easy to navigate, and visually clear, allowing users to perform 
+actions like borrowing, returning, and managing books in the library.
+### Key Components of the User Interface:
+1. Login Screen:
+    Allows users to log in with their credentials. It includes fields for entering a username and password.
+2. Registration Screen:
+   A form to create a new user account by entering a username, password and email. This screen is accessible for new users who wish to sign up.
+3. Home Screen:
+   A welcoming screen for all users. Also it works as default hope after successful login or register.
+4. Library Screen:
+   Displays a list of books available for borrowing. All users can add new books to the library from this screen.
+5. My Books (Borrowed Books):
+   A list showing the books currently borrowed by the user. Users can return a book from this list by selecting it and pressing the "Return" button.
+6. Transaction History Screen:
+   Displays a history of all transactions, such as borrowing and returning books.
+
+![HOMESCREEN.png](images%2FHOMESCREEN.png)
 
 ## Challenges and Approach:
 ### Main Challenges
