@@ -22,6 +22,8 @@ public class RegistrationScreen {
         this.authService = new AuthService();  // Initialize the AuthService
     }
 
+
+
     public void start(Stage stage) {
         VBox layout = new VBox(10);
         layout.setStyle("-fx-padding: 20;");

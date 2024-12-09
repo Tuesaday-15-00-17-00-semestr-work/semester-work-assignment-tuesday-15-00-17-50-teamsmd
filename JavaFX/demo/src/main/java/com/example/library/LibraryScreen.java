@@ -1,7 +1,6 @@
 package com.example.library;
 
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,10 +30,10 @@ public class LibraryScreen {
         Button returnButton = new Button("Return");
 
         // Initially, borrowed books list is empty
-        refreshBooksList(borrowedBooksListView);
+        refreshBorrowedBooks(borrowedBooksListView);
 
         // Refresh action
-        refreshButton.setOnAction(e -> refreshBooksList(borrowedBooksListView));
+        refreshButton.setOnAction(e -> refreshBorrowedBooks(borrowedBooksListView));
 
         // Return action
         returnButton.setOnAction(e -> {
@@ -56,19 +55,34 @@ public class LibraryScreen {
         mainApp.getBorderPane().setCenter(layout);
     }
 
-    // Fetch borrowed books from backend
-    private void refreshBooksList(ListView<String> borrowedBooksListView) {
-        String response = bookService.fetchBorrowedBooks(); // Fetch borrowed books
-
-        // Clear the list before adding new items
+    private void refreshBorrowedBooks(ListView<String> borrowedBooksListView) {
+        String response = bookService.fetchBorrowedBooks();
         borrowedBooksListView.getItems().clear();
 
+        System.out.println("Borrowed Books - Response: " + response);
+
         if (!response.equals("[]")) {
-            String[] books = response.split("\n");
-            borrowedBooksListView.getItems().addAll(books); // Add each borrowed book to the list
+            String[] books = response.split("\\},\\{");
+            for (String book : books) {
+                String title = extractTitleFromBook(book);
+                if (!title.isEmpty()) {
+                    borrowedBooksListView.getItems().add(title);
+                }
+            }
         } else {
-            showError("No books borrowed yet.");
+            System.out.println("No books borrowed yet.");
         }
+    }
+
+    private String extractTitleFromBook(String book) {
+        String titleKey = "\"title\":";
+        int titleIndex = book.indexOf(titleKey);
+        if (titleIndex != -1) {
+            int start = titleIndex + titleKey.length() + 1;
+            int end = book.indexOf("\"", start);
+            return book.substring(start, end);
+        }
+        return ""; // Return empty if no title found
     }
 
     private void showError(String message) {

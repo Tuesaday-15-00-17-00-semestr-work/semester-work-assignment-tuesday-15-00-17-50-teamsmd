@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
 
 
 public class BookService {
@@ -24,21 +25,16 @@ public class BookService {
     public String fetchAllBooks() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/lib/books/user/all")) // Correct endpoint for fetching books
-                    .header("Authorization", "Bearer " + AuthService.getToken()) // Pass token
+                    .uri(URI.create(BASE_URL + "/lib/books/user/all"))
+                    .header("Authorization", "Bearer " + AuthService.getToken())
                     .GET()
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                return response.body(); // Return the raw response if successful
-            } else {
-                return "[]"; // Return empty JSON array in case of failure
-            }
+            return response.statusCode() == 200 ? response.body() : "[]";
         } catch (Exception e) {
             e.printStackTrace();
-            return "[]"; // Return empty JSON array in case of an exception
+            return "[]";
         }
     }
 
@@ -81,33 +77,57 @@ public class BookService {
         return "";
     }
 
-
-
     /**
-     * Borrow a book by title.
+     * Borrow a book by user_id and book_id.
      *
-     * @param bookTitle Title of the book to borrow.
+     * @param userId  ID of the user borrowing the book.
+     * @param bookId  ID of the book to borrow.
+     * @param bookTitle Title of the book (optional for logging).
      * @return True if borrowing is successful, false otherwise.
      */
     public boolean borrowBook(int userId, int bookId, String bookTitle) {
         try {
-            String requestBody = String.format("{\"userId\": %d, \"bookId\": %d, \"bookTitle\": \"%s\"}", userId, bookId, bookTitle);
+            String date = LocalDateTime.now().toString();
+            String requestBody = String.format(
+                    "{\"user_id\": %d, \"book_id\": %d, \"action\": \"borrow\", \"date\": \"%s\"}",
+                    userId, bookId, date
+            );
+
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/user/borrow")) // Correct endpoint for borrowing a book
+                    .uri(URI.create(BASE_URL + "/lib/transactions/user/addtrans"))
                     .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + AuthService.getToken()) // Include token
+                    .header("Authorization", "Bearer " + AuthService.getToken())
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            return response.statusCode() == 200; // Check if the response code indicates success
+            return response.statusCode() == 200 || response.statusCode() == 201;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
+    /**
+     * Fetch borrowed books from the backend for the current user.
+     *
+     * @return JSON string representing the list of borrowed books.
+     */
+    public String fetchBorrowedBooks() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/lib/transactions/user/borrowed"))
+                    .header("Authorization", "Bearer " + AuthService.getToken())
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.statusCode() == 200 ? response.body() : "[]";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "[]";
+        }
+    }
 
     /**
      * Return a borrowed book by title.
@@ -119,15 +139,14 @@ public class BookService {
         try {
             String requestBody = String.format("{\"title\": \"%s\"}", bookTitle);
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/return")) // Correct endpoint for returning books
+                    .uri(URI.create(BASE_URL + "/lib/transactions/user/return"))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + AuthService.getToken())
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            return response.statusCode() == 200; // Check if the response code indicates success
+            return response.statusCode() == 200;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -164,30 +183,5 @@ public class BookService {
         }
     }
 
-    /**
-     * Fetch borrowed books from the backend for the current user.
-     *
-     * @return JSON string representing the list of borrowed books.
-     */
-    public String fetchBorrowedBooks() {
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/user/borrowed")) // Correct endpoint for fetching borrowed books
-                    .header("Authorization", "Bearer " + AuthService.getToken()) // Pass token
-                    .GET()
-                    .build();
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                return response.body(); // Return the list of borrowed books if the response is OK
-            } else {
-                System.err.println("Failed to fetch borrowed books. Status code: " + response.statusCode());
-                return "[]"; // Return empty JSON array in case of failure
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "[]"; // Return empty JSON array in case of an exception
-        }
-    }
 }

@@ -1,35 +1,22 @@
 package com.example.library;
 
 public class Book {
-    private int id;
+    private int bookId;
     private String title;
+    private String author;
+    private int isbn;
+    private int availableCopies;
 
-    // Constructor to initialize the Book object
-    public Book(int id, String title) {
-        this.id = id;
-        this.title = title;
-    }
-
-    // Getters and Setters for id and title
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    // Override toString method to display the book title in the ListView
-    @Override
-    public String toString() {
-        return title;
-    }
+    // Getters and setters for each field
+    public int getBookId() { return bookId; }
+    public void setBookId(int bookId) { this.bookId = bookId; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getAuthor() { return author; }
+    public void setAuthor(String author) { this.author = author; }
+    public int getIsbn() { return isbn; }
+    public void setIsbn(int isbn) { this.isbn = isbn; }
+    public int getAvailableCopies() { return availableCopies; }
+    public void setAvailableCopies(int availableCopies) { this.availableCopies = availableCopies; }
 }
+

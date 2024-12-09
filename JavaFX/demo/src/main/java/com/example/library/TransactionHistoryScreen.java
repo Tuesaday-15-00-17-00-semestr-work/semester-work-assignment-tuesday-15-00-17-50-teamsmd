@@ -19,6 +19,8 @@ public class TransactionHistoryScreen {
         this.mainApp = mainApp;
     }
 
+
+
     public void start(Stage stage) {
         VBox layout = new VBox(20);
         layout.setStyle("-fx-padding: 20;");

@@ -1,7 +1,6 @@
 package com.example.library;
 
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -38,10 +37,8 @@ public class BookLendingScreen {
         borrowButton.setOnAction(e -> {
             String selectedBook = bookListView.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {
-                int userId = 1; // Replace with the actual user ID (get from session or login)
-
-                // Extract the book ID and title from selected book
                 int bookId = extractBookIdFromBook(selectedBook);
+                int userId = 1; // Replace with actual user ID from login or session
 
                 boolean success = bookService.borrowBook(userId, bookId, selectedBook);
                 if (success) {
@@ -69,6 +66,7 @@ public class BookLendingScreen {
     private void fetchAvailableBooks(ListView<String> bookListView) {
         String response = bookService.fetchAllBooks(); // Fetch all books
         bookListView.getItems().clear();
+
         System.out.println("Response from backend: " + response); // Check the full response
 
         if (!response.equals("[]")) {
@@ -123,7 +121,6 @@ public class BookLendingScreen {
         }
         return ""; // Return empty if no title found
     }
-
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
