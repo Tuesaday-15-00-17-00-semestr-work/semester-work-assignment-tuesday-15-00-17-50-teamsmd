@@ -1,0 +1,26 @@
+##Tutorial - How to Run and Test the Library Management System
+#Overview:
+This guide will walk you through the process of setting up and running the Library Management System (LMS) project. It covers both the backend (Spring Boot API) and the frontend (JavaFX UI) setup, including testing the functionality of borrowing and returning books.
+
+#Prerequisites:
+Java 17 or later (for both backend and frontend)
+Maven (for dependency management)
+SQLite (for the database)
+JavaFX 21 (for the frontend UI)
+
+
+#Step 1: Clone the Repository
+Open your terminal and clone the repository:
+git clone git@github.com:Tuesaday-15-00-17-00-semestr-work/semester-work-assignment-tuesday-15-00-17-50-teamsmd.git
+cd library-management-system
+
+#Step 2: Backend Setup
+Open the project in your IDE (e.g., IntelliJ IDEA, Eclipse).
+Run the project with SmdlibApplication.java located in /src/main/java/lib.smd.SMDLIB/ directory.
+After successful run you should be able to see the "Server is UP!" message in your output.
+
+#Step 3: Frontend Setup
+Open the JavaFX file from project in another project in your IDE (e.g., IntelliJ IDEA, Eclipse).
+Run the project with MainApp.java located in demo/src/main/java/com.example.library/ directory.
+After successful run a window should pop up on your screen welcoming you in the Library Management System
+
