@@ -57,16 +57,28 @@ public class BookLendingScreen {
         mainApp.getBorderPane().setCenter(layout);
     }
 
-    // Fetch available books from backend
+    // Fetch available books from backend and return a ListView of titles
     private void fetchAvailableBooks(ListView<String> bookListView) {
+        // Fetch the books from the backend
         String response = bookService.fetchAllBooks();
-        if (!response.equals("[]")) {
+
+        // Clear the ListView before adding new items
+        bookListView.getItems().clear();
+
+        if (response != null && !response.isEmpty() && !response.equals("[]")) {
+            // Parse the JSON response manually (basic string manipulation)
             String[] books = response.replace("[", "").replace("]", "").replace("\"", "").split(",");
-            bookListView.getItems().addAll(books);
+
+            // Add only book titles to the ListView
+            for (String book : books) {
+                bookListView.getItems().add(book.trim());
+            }
         } else {
-            showError("Failed to fetch books or no books available.");
+            // Show error message if there are no books or failed to fetch
+            showError("Failed to fetch available books or no books available.");
         }
     }
+
 
     // Show error message
     private void showError(String message) {
