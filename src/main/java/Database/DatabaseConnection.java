@@ -76,7 +76,7 @@ public class DatabaseConnection {
 								+ "user_id INTEGER NOT NULL,"
 								+ "book_id INTEGER NOT NULL,"
 								+ "action TEXT NOT NULL,"
-								+ "date DATETIME NOT NULL,"
+								+ "date TEXT NOT NULL,"
 								+ "FOREIGN KEY(user_id) REFERENCES Users(user_id),"
 								+ "FOREIGN KEY(book_id) REFERENCES Books(book_id)"
 								+ ");");

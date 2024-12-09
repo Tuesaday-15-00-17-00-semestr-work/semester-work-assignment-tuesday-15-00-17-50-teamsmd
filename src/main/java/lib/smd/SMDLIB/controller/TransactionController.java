@@ -44,11 +44,10 @@ public class TransactionController {
 	}
 
 //--------------------------------------POST----------------------------------------|
-	//before this you have to make a request for PUT bookcount
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/user/addtrans")
 	void createTransaction(@RequestBody TransDto jsonTrans) {
-		transRep.addTransActionToDB(jsonTrans.transaction_id, jsonTrans.user_id, 
+		transRep.addTransActionToDB(jsonTrans.user_id, 
 				jsonTrans.book_id, jsonTrans.action, jsonTrans.date);
 	}
 	

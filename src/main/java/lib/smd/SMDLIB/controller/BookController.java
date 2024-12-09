@@ -42,7 +42,7 @@ public class BookController {
 		
 //-------------------------------------POST----------------------------------------|
 	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping("/admin/addbook")
+	@PostMapping("/user/addbook")
 	void createBook(@RequestBody BookDto jsonBook) {
 		bookRep.addBookToDB(jsonBook.title, jsonBook.author, jsonBook.isbn, jsonBook.available_copies);
 	}

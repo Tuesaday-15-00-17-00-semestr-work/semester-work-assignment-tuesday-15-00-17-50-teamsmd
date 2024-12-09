@@ -92,6 +92,7 @@ public class BookRepo {
             
             //find if the available copies are not negative
             if(newCount+change < 0) {
+            	deleteBookFromDB(id);
             	throw new Exception("NOT ENOUGH COPIES!!");
             }
             
