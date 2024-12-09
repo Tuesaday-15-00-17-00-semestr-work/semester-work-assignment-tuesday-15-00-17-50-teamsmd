@@ -72,21 +72,6 @@ public class MainApp extends Application {
         // Add the toggle button at the top and buttons to the menu
         sideMenu.getChildren().addAll(toggleButton, homeButton, loginButton, registerButton, transactionButton, settingsButton, bookLendingButton, libraryButton);
 
-        // Create the Logout button with confirmation dialog (styled like other buttons)
-        Button logoutButton = createMenuButton("Logout");
-        logoutButton.setOnAction(e -> {
-            // Logout confirmation dialog
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm Logout");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure you want to log out?");
-            alert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    loadHomeScreen(stage);  // Navigate back to the home screen or login page
-                }
-            });
-        });
-
         // Create the Close button with confirmation dialog (styled like other buttons)
         Button closeButton = createMenuButton("Close");
         closeButton.setOnAction(e -> {
@@ -110,8 +95,8 @@ public class MainApp extends Application {
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);  // Make sure the spacer takes up the remaining space
 
-        // Add the spacer, logout button, and close button
-        sideMenu.getChildren().addAll(spacer, logoutButton, closeButtonBox);
+        // Add the spacer and close button
+        sideMenu.getChildren().addAll(spacer, closeButtonBox);
 
         return sideMenu;
     }

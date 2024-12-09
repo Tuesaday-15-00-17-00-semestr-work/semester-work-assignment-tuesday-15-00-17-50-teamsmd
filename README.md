@@ -95,6 +95,13 @@ actions like borrowing, returning, and managing books in the library.
 
 ![HOMESCREEN.png](images%2FHOMESCREEN.png)
 
+### Example of successful actions:
+After successful login:
+![LOGIN.png](images%2FLOGIN.png)
+
+After borrowing new book:
+![BORROW.png](images%2FBORROW.png)
+
 ## Challenges and Approach:
 ### Main Challenges
 
