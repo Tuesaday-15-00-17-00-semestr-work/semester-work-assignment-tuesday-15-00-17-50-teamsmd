@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 public class BookLendingScreen {
 
-    private MainApp mainApp;  // Reference to MainApp
+    private MainApp mainApp;
     private BookService bookService = new BookService(); // Use BookService for API calls
 
     public BookLendingScreen(MainApp mainApp) {
@@ -38,7 +38,12 @@ public class BookLendingScreen {
         borrowButton.setOnAction(e -> {
             String selectedBook = bookListView.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {
-                boolean success = bookService.borrowBook(selectedBook);
+                int userId = 1; // Replace with the actual user ID (get from session or login)
+
+                // Extract the book ID and title from selected book
+                int bookId = extractBookIdFromBook(selectedBook);
+
+                boolean success = bookService.borrowBook(userId, bookId, selectedBook);
                 if (success) {
                     bookListView.getItems().remove(selectedBook);
                     showSuccess("You have borrowed \"" + selectedBook + "\"");
@@ -64,14 +69,61 @@ public class BookLendingScreen {
     private void fetchAvailableBooks(ListView<String> bookListView) {
         String response = bookService.fetchAllBooks(); // Fetch all books
         bookListView.getItems().clear();
+        System.out.println("Response from backend: " + response); // Check the full response
 
         if (!response.equals("[]")) {
-            String[] books = response.split("\n"); // Split the titles by new line
-            bookListView.getItems().addAll(books); // Add each title to the list view
+            // Manually parse the JSON response without external libraries
+            String[] books = response.split("\\},\\{"); // Split books by the JSON object separator
+            for (String book : books) {
+                String title = extractTitleFromBook(book);
+                int bookId = extractBookIdFromBook(book);
+
+                // Debug print statements to check extracted title and book ID
+                System.out.println("Extracted title: " + title);
+                System.out.println("Extracted book ID: " + bookId);
+
+                // Only add to the list if title is not empty
+                if (!title.isEmpty() && bookId != 0) {
+                    bookListView.getItems().add(title); // Display the book title in the list
+                } else {
+                    System.out.println("Skipping invalid book with ID: " + bookId + " and Title: " + title);
+                }
+            }
         } else {
             showError("Failed to fetch books or no books available.");
         }
     }
+
+    private int extractBookIdFromBook(String book) {
+        String idKey = "\"book_id\":";
+        int idIndex = book.indexOf(idKey);
+        if (idIndex != -1) {
+            int start = idIndex + idKey.length();
+            int end = book.indexOf(",", start);
+            try {
+                int bookId = Integer.parseInt(book.substring(start, end).trim());
+                System.out.println("Extracted book ID: " + bookId);  // Debug print
+                return bookId;
+            } catch (NumberFormatException e) {
+                System.err.println("Error parsing book ID from: " + book);
+            }
+        }
+        return 0; // Default ID if not found
+    }
+
+    private String extractTitleFromBook(String book) {
+        String titleKey = "\"title\":";
+        int titleIndex = book.indexOf(titleKey);
+        if (titleIndex != -1) {
+            int start = titleIndex + titleKey.length() + 1; // Skip the `"` after the `:`
+            int end = book.indexOf("\"", start);
+            String title = book.substring(start, end);
+            System.out.println("Extracted title: " + title);  // Debug print
+            return title;
+        }
+        return ""; // Return empty if no title found
+    }
+
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -36,13 +36,17 @@ public class LibraryScreen {
         // Refresh action
         refreshButton.setOnAction(e -> refreshBooksList(borrowedBooksListView));
 
-        // Return action (to be implemented later)
+        // Return action
         returnButton.setOnAction(e -> {
             String selectedBook = borrowedBooksListView.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {
-                // Implement logic to return the book
-                showSuccess("You have returned \"" + selectedBook + "\"");
-                borrowedBooksListView.getItems().remove(selectedBook);
+                boolean success = bookService.returnBook(selectedBook); // Return book to library
+                if (success) {
+                    borrowedBooksListView.getItems().remove(selectedBook);
+                    showSuccess("You have returned \"" + selectedBook + "\"");
+                } else {
+                    showError("Failed to return book. Please try again.");
+                }
             } else {
                 showError("Please select a book to return!");
             }
