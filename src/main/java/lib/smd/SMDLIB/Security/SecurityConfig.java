@@ -38,9 +38,25 @@ public class SecurityConfig {
 		return http.build();
 	}
 	
-	@Bean	//USER
+	@Bean	//USER-Book
 	@Order(2)
-	public SecurityFilterChain UserStuff(HttpSecurity http) throws Exception{
+	public SecurityFilterChain UserBook(HttpSecurity http) throws Exception{
+		http
+			.csrf(AbstractHttpConfigurer::disable)
+			.authorizeHttpRequests(auth -> auth
+					.anyRequest().authenticated()
+			)
+			.sessionManagement(session -> session
+					.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			)
+			.securityMatcher("/lib/books/user/**")
+			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+		return http.build();
+	}
+	
+	@Bean	//USER-Trans
+	@Order(2)
+	public SecurityFilterChain UserTrans(HttpSecurity http) throws Exception{
 		http
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(auth -> auth
@@ -50,7 +66,6 @@ public class SecurityConfig {
 					.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 			.securityMatcher("/lib/transactions/user/**")
-			.securityMatcher("/lib/books/user/**")
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
