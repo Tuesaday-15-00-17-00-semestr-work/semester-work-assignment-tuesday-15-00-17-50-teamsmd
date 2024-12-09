@@ -1,6 +1,7 @@
 package com.example.library;
 
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,7 +14,6 @@ public class LibraryScreen {
     private MainApp mainApp;
     private BookService bookService = new BookService(); // Use BookService for API calls
 
-    // Constructor
     public LibraryScreen(MainApp mainApp) {
         this.mainApp = mainApp;
     }
@@ -28,35 +28,43 @@ public class LibraryScreen {
 
         ListView<String> borrowedBooksListView = new ListView<>();
         Button refreshButton = new Button("Refresh");
-        Button addBookButton = new Button("Add New Book");
+        Button returnButton = new Button("Return");
 
-        // Fetch and display borrowed books
-        fetchAvailableBooks(borrowedBooksListView);
+        // Initially, borrowed books list is empty
+        refreshBooksList(borrowedBooksListView);
 
         // Refresh action
-        refreshButton.setOnAction(e -> fetchAvailableBooks(borrowedBooksListView));
+        refreshButton.setOnAction(e -> refreshBooksList(borrowedBooksListView));
 
-        // Add new book action
-        addBookButton.setOnAction(e -> openAddBookPopup(stage));
+        // Return action (to be implemented later)
+        returnButton.setOnAction(e -> {
+            String selectedBook = borrowedBooksListView.getSelectionModel().getSelectedItem();
+            if (selectedBook != null) {
+                // Implement logic to return the book
+                showSuccess("You have returned \"" + selectedBook + "\"");
+                borrowedBooksListView.getItems().remove(selectedBook);
+            } else {
+                showError("Please select a book to return!");
+            }
+        });
 
-        layout.getChildren().addAll(titleLabel, borrowedBooksListView, refreshButton, addBookButton);
+        layout.getChildren().addAll(titleLabel, borrowedBooksListView, refreshButton, returnButton);
         mainApp.getBorderPane().setCenter(layout);
     }
 
-    private void fetchAvailableBooks(ListView<String> listView) {
-        String response = bookService.fetchAllBooks(); // Get the formatted titles
-        listView.getItems().clear();
-        if (!response.equals("[]")) {
-            String[] books = response.split("\n"); // Split the titles by new line
-            listView.getItems().addAll(books); // Add each title to the list view
-        } else {
-            showError("Failed to fetch borrowed books or no books available.");
-        }
-    }
+    // Fetch borrowed books from backend
+    private void refreshBooksList(ListView<String> borrowedBooksListView) {
+        String response = bookService.fetchBorrowedBooks(); // Fetch borrowed books
 
-    private void openAddBookPopup(Stage stage) {
-        AddBookPopup addBookPopup = new AddBookPopup(mainApp);
-        addBookPopup.showPopup(stage); // Open the popup
+        // Clear the list before adding new items
+        borrowedBooksListView.getItems().clear();
+
+        if (!response.equals("[]")) {
+            String[] books = response.split("\n");
+            borrowedBooksListView.getItems().addAll(books); // Add each borrowed book to the list
+        } else {
+            showError("No books borrowed yet.");
+        }
     }
 
     private void showError(String message) {

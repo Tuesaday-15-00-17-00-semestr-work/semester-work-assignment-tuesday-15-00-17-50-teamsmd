@@ -2,7 +2,10 @@ package com.example.library;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -25,7 +28,7 @@ public class BookLendingScreen {
 
         ListView<String> bookListView = new ListView<>();
         Button borrowButton = new Button("Borrow");
-        Button backButton = new Button("Back");
+        Button refreshButton = new Button("Refresh");
         Button addBookButton = new Button("Add New Book");
 
         // Fetch available books
@@ -47,40 +50,29 @@ public class BookLendingScreen {
             }
         });
 
-        // Back action
-        backButton.setOnAction(e -> mainApp.loadHomeScreen(stage));
+        // Refresh action
+        refreshButton.setOnAction(e -> fetchAvailableBooks(bookListView));
 
         // Add new book action
         addBookButton.setOnAction(e -> showAddBookPopup(stage));
 
-        layout.getChildren().addAll(titleLabel, bookListView, borrowButton, addBookButton, backButton);
+        layout.getChildren().addAll(titleLabel, bookListView, borrowButton, refreshButton, addBookButton);
         mainApp.getBorderPane().setCenter(layout);
     }
 
     // Fetch available books from backend and return a ListView of titles
     private void fetchAvailableBooks(ListView<String> bookListView) {
-        // Fetch the books from the backend
-        String response = bookService.fetchAllBooks();
-
-        // Clear the ListView before adding new items
+        String response = bookService.fetchAllBooks(); // Fetch all books
         bookListView.getItems().clear();
 
-        if (response != null && !response.isEmpty() && !response.equals("[]")) {
-            // Parse the JSON response manually (basic string manipulation)
-            String[] books = response.replace("[", "").replace("]", "").replace("\"", "").split(",");
-
-            // Add only book titles to the ListView
-            for (String book : books) {
-                bookListView.getItems().add(book.trim());
-            }
+        if (!response.equals("[]")) {
+            String[] books = response.split("\n"); // Split the titles by new line
+            bookListView.getItems().addAll(books); // Add each title to the list view
         } else {
-            // Show error message if there are no books or failed to fetch
-            showError("Failed to fetch available books or no books available.");
+            showError("Failed to fetch books or no books available.");
         }
     }
 
-
-    // Show error message
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -89,7 +81,6 @@ public class BookLendingScreen {
         alert.showAndWait();
     }
 
-    // Show success message
     private void showSuccess(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
@@ -99,47 +90,8 @@ public class BookLendingScreen {
     }
 
     private void showAddBookPopup(Stage stage) {
-        VBox addBookLayout = new VBox(10);
-        addBookLayout.setStyle("-fx-padding: 20;");
-        addBookLayout.setAlignment(Pos.CENTER);
-
-        Label titleLabel = new Label("Add New Book");
-        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-        Label nameLabel = new Label("Book Title:");
-        TextField titleField = new TextField();
-        titleField.setPromptText("Enter book title");
-
-        Label authorLabel = new Label("Author:");
-        TextField authorField = new TextField();
-        authorField.setPromptText("Enter author's name");
-
-        Button submitButton = new Button("Add Book");
-        submitButton.setOnAction(e -> {
-            String title = titleField.getText();
-            String author = authorField.getText();
-            if (title.isEmpty() || author.isEmpty()) {
-                showError("All fields must be filled!");
-            } else {
-                // Automatically set ISBN to 0 and available copies to 1
-                boolean success = bookService.addBook(title, author);
-
-                if (success) {
-                    showSuccess("Book added successfully!");
-                    stage.close();  // Close the add book popup
-                } else {
-                    showError("Failed to add book. Please try again.");
-                }
-            }
-        });
-
-        addBookLayout.getChildren().addAll(titleLabel, nameLabel, titleField, authorLabel, authorField, submitButton);
-
-        // Create a scene and show the popup window
-        Scene addBookScene = new Scene(addBookLayout, 300, 250);
-        Stage addBookStage = new Stage();
-        addBookStage.setScene(addBookScene);
-        addBookStage.setTitle("Add New Book");
-        addBookStage.show();
+        // Open the AddBookPopup to add a new book to the system
+        AddBookPopup addBookPopup = new AddBookPopup(mainApp);
+        addBookPopup.showPopup(stage);
     }
 }
