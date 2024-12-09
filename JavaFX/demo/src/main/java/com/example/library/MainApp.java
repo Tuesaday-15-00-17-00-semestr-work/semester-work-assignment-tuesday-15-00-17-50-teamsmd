@@ -157,12 +157,8 @@ public class MainApp extends Application {
     }
 
     private void loadAccountSettingsScreen(Stage stage) {
-        Label settingsLabel = new Label("Account Settings Screen");
-        settingsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-        BorderPane contentPane = new BorderPane();
-        contentPane.setCenter(settingsLabel);
-        borderPane.setCenter(contentPane);
+        AccountSettingsScreen accountSettingsScreen = new AccountSettingsScreen(this);
+        accountSettingsScreen.start(stage); // Load the AccountSettingsScreen
     }
 
     public BorderPane getBorderPane() {
@@ -180,5 +176,4 @@ public class MainApp extends Application {
     public BookService getBookService() {
         return new BookService();  // Return a new instance of BookService
     }
-
 }
