@@ -2,7 +2,7 @@
 
 **This project is made in Java 21!**
 
-Tutorial of how to run and test the program can be found in [Tutorial.txt](./images/Tutorial.txt)
+Tutorial of how to run and test the program can be found in [Tutorial.txt](images%2FTutorial.txt)
 
 ## Project Overview:
 The SMDLIB Simple Library Management System enables users to borrow and add books to a common book database. This way users can save money and resources and manage them more effectively.
