@@ -92,8 +92,8 @@ public class BookRepo {
             
             //find if the available copies are not negative
             if(newCount+change < 0) {
-            	deleteBookFromDB(id);
-            	throw new Exception("NOT ENOUGH COPIES!!");
+            	log.info("NOT ENOUGH COPIES!!");
+            	return;
             }
             
             insertSQL = "UPDATE Books SET available_copies=? WHERE book_id=?;";
