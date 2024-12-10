@@ -2,11 +2,7 @@ package com.example.library;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -36,8 +32,30 @@ public class AccountSettingsScreen {
         TableColumn<UserEntity, String> roleColumn = new TableColumn<>("Role");
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
 
+        TableColumn<UserEntity, Void> deleteColumn = new TableColumn<>("Delete");
+        deleteColumn.setCellFactory(col -> new TableCell<UserEntity, Void>() {
+            private final Button deleteButton = new Button("Delete");
+
+            {
+                deleteButton.setOnAction(event -> {
+                    UserEntity selectedUser = getTableView().getItems().get(getIndex());
+                    deleteUser(selectedUser);
+                });
+            }
+
+            @Override
+            public void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                }
+            }
+        });
+
         // Add the columns to the table
-        userTable.getColumns().addAll(usernameColumn, emailColumn, roleColumn);
+        userTable.getColumns().addAll(usernameColumn, emailColumn, roleColumn, deleteColumn);
 
         // Fetch all users from the backend
         UserService userService = new UserService();
@@ -73,23 +91,44 @@ public class AccountSettingsScreen {
         mainApp.getBorderPane().setCenter(contentPane);
     }
 
-    private void showError(String s) {
+    // Delete the user and update the table
+    private void deleteUser(UserEntity user) {
+        UserService userService = new UserService();
+        boolean isDeleted = userService.deleteUser(user.getUserId());
+        if (isDeleted) {
+            // Remove the user from the TableView after deletion
+            refreshUserTable();
+            showSuccess("User deleted successfully.");
+        } else {
+            showError("Error deleting user.");
+        }
+    }
+
+    // Refresh the user table to reflect the deletion
+    private void refreshUserTable() {
+        UserService userService = new UserService();
+        List<UserEntity> users = userService.fetchAllUsers();
+        if (users != null) {
+            TableView<UserEntity> userTable = new TableView<>();
+            userTable.getItems().clear();
+            userTable.getItems().addAll(users);
+        }
+    }
+
+    private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(null);
-        alert.setContentText(s);
+        alert.setContentText(message);
         alert.showAndWait();
     }
 
-    private boolean checkIfAdmin() {
-        // Implement logic to check if the logged-in user is an admin
-        String userRole = getCurrentUserRole(); // Placeholder method
-        return userRole.equals("Admin");
-    }
-
-    private String getCurrentUserRole() {
-        // Logic to retrieve the current user's role from session/JWT
-        return "Admin"; // Placeholder for example
+    private void showSuccess(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private void loadRegistrationScreen(Stage stage) {

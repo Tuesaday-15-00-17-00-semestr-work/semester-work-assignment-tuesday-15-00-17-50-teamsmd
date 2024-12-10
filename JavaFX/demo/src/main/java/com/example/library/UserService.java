@@ -47,11 +47,14 @@ public class UserService {
                     String[] userDetails = userString.split(",");
 
                     String username = null, email = null, role = null;
+                    int id = 0;
 
                     // Extract individual fields
                     for (String detail : userDetails) {
                         String[] keyValue = detail.split(":");
-                        if (keyValue[0].contains("username")) {
+                        if (keyValue[0].contains("user_id")) {
+                            id = Integer.parseInt(keyValue[1].replace("\"", "").trim());
+                        } else if (keyValue[0].contains("username")) {
                             username = keyValue[1].replace("\"", "").trim();
                         } else if (keyValue[0].contains("email")) {
                             email = keyValue[1].replace("\"", "").trim();
@@ -60,9 +63,9 @@ public class UserService {
                         }
                     }
 
-                    // Create UserEntity objects
+                    // Create UserEntity objects, now including id
                     if (username != null && email != null && role != null) {
-                        users.add(new UserEntity(username, email, role));
+                        users.add(new UserEntity(id, username, email, role));
                     }
                 }
             }
@@ -102,10 +105,13 @@ public class UserService {
             String requestBody = String.format("{\"id\": %d}", userId);
 
             // Correct DELETE request without a body
+            String token = "Bearer " + AuthService.getToken();  // Use the token for auth
+
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/delete")) // Endpoint for deleting a user
+                    .uri(URI.create(BASE_URL + "/delete"))
                     .DELETE()
                     .header("Content-Type", "application/json")
+                    .header("Authorization", token) // Include token in the header
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
