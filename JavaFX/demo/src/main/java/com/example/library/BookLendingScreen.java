@@ -3,6 +3,7 @@ package com.example.library;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
@@ -57,33 +58,18 @@ public class BookLendingScreen {
             if (selectedBook != null) {
                 int userId = 1; // Replace with actual user ID from login or session
 
-                // DEBUG: Log the selected book details
-                System.out.println("Attempting to borrow book: " + selectedBook);
-
                 boolean success = bookService.borrowBook(userId, selectedBook.getId());
                 if (success) {
-                    // DEBUG: Log successful borrow
-                    System.out.println("Successfully borrowed: " + selectedBook);
-
                     selectedBook.setAvailableCopies(selectedBook.getAvailableCopies() - 1);
                     bookTable.refresh();
-
-                    // Add the book to "My Books" (LibraryScreen)
-                    LibraryScreen libraryScreen = new LibraryScreen(mainApp);
-                    libraryScreen.addBorrowedBook(selectedBook);
-
                     showSuccess("You have borrowed \"" + selectedBook.getTitle() + "\"");
                 } else {
-                    // DEBUG: Log borrow failure
-                    System.err.println("Failed to borrow book: " + selectedBook);
                     showError("Failed to borrow book. Please try again.");
                 }
             } else {
-                System.err.println("No book selected to borrow.");
                 showError("Please select a book to borrow!");
             }
         });
-
 
         // Refresh action
         refreshButton.setOnAction(e -> fetchAvailableBooks(bookTable));
