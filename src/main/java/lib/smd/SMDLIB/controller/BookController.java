@@ -56,8 +56,8 @@ public class BookController {
 
 //----------------------------------DELETE-----------------------------------------|		
 	@ResponseStatus(HttpStatus.GONE)
-	@DeleteMapping("/admin/delete")
-	void deleteBook(@RequestBody BookDelDto jsonBD) {
-		bookRep.deleteBookFromDB(jsonBD.id);
+	@DeleteMapping("/admin/delete/{id}")
+	void deleteBook(@PathVariable int id) {
+		bookRep.deleteBookFromDB(id);
 	}
 }

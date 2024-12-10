@@ -50,9 +50,9 @@ public class UserController {
 	
 //--------------------------------------DELETE----------------------------------------|		
 	@ResponseStatus(HttpStatus.GONE)
-	@DeleteMapping("/users/delete")
-	void deleteUser(@RequestBody UserDelD jsonUserDel) {
-		userRep.deleteUserFromDB(jsonUserDel.id);
+	@DeleteMapping("/users/delete/{id}")
+	void deleteUser(@PathVariable int id) {
+		userRep.deleteUserFromDB(id);
 	}
 		
 }

@@ -213,4 +213,26 @@ public class BookService {
             return false;
         }
     }
+    
+    public boolean deleteBook(int bookId) {
+        try {
+            //String requestBody = String.format("{\"id\": %d}", userId);
+
+            // Correct DELETE request without a body
+            String token = "Bearer " + AuthService.getToken();  // Use the token for auth
+            String bid = String.valueOf(bookId);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/lib/books/admin/delete/"+bid))
+                    .DELETE()
+                    .header("Authorization", token) // Include token in the header
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.statusCode() == 200; // HTTP 200 OK if deletion is successful
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
