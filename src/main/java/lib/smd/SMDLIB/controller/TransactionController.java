@@ -28,7 +28,7 @@ public class TransactionController {
 	}
 	
 //--------------------------------------GET----------------------------------------|
-	@GetMapping("/admin/all")
+	@GetMapping("/user/all")
 	List<Transaction> findAllTransactions(){
 		return transRep.displayTable();
 	}

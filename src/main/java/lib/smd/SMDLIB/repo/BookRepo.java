@@ -7,11 +7,14 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import Database.DatabaseConnection;
 import lib.smd.SMDLIB.SmdlibApplication;
 import lib.smd.SMDLIB.model.Book;
+import lib.smd.SMDLIB.model.Transaction;
+import lib.smd.SMDLIB.model.UserEntity;
 
 @Repository
 public class BookRepo {
@@ -20,6 +23,12 @@ public class BookRepo {
 	
 	private static final Logger log = LoggerFactory.getLogger(SmdlibApplication.class);
 	private static DatabaseConnection DBC;
+	
+	private final UserRepo userRep;
+		
+	public BookRepo(UserRepo userRep, PasswordEncoder passEnc) {
+		this.userRep = userRep;
+	}
 	
 //--------------------------------------GET all books----------------------------------------------------|
 	public List<Book> displayTable() {	
@@ -39,13 +48,13 @@ public class BookRepo {
 	}
 
 //--------------------------------------GET book by id----------------------------------------------------|
-	public Book displayBook(int id) {	
+	public Book displayBook(String bok) {	
 		
-		String insertSQL = "SELECT * FROM Books WHERE book_id=?;";
+		String insertSQL = "SELECT * FROM Books WHERE title=?;";
 		
 		try {
             PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
-            statement.setInt(1, id);
+            statement.setString(1, bok);
             
             DBC.rs = statement.executeQuery();
             
@@ -123,5 +132,63 @@ public class BookRepo {
 		}catch(SQLException e){
 			log.info("Error deleting book: "+e.getMessage());
 		}
+	}
+	
+	//--------------------my books------------------------------
+	public List<Book> myBooks(String username) {	
+		books = new ArrayList<Book>();
+		List<Transaction> transactions = new ArrayList<Transaction>();
+		int userID = findUserID(username);
+		String insertSQL = "SELECT Borrows.transaction_id, Users.email, Books.title, "
+        		+ "Borrows.action, Borrows.date FROM Borrows "
+        		+ "JOIN Users ON (Borrows.user_id = Users.user_id) "
+        		+ "JOIN Books ON (Borrows.book_id = Books.book_id)"
+        		+ "WHERE user_id=?;";
+		
+		try {
+            PreparedStatement statement = DBC.connection.prepareStatement(insertSQL);
+            statement.setInt(1, userID);
+            
+            DBC.rs = statement.executeQuery();
+            
+            while(DBC.rs.next()) {		        
+		    	transactions.add(new Transaction(DBC.rs.getInt("transaction_id"), DBC.rs.getString("email"),
+		        		DBC.rs.getString("title"), DBC.rs.getString("action"), DBC.rs.getString("date")));
+		    }
+            
+		    return getBooks(transactions, books);
+		}catch(SQLException e){
+			log.info("Error printing Books: "+e.getMessage());
+		}
+		return null;
+	}
+	
+	private int findUserID(String username) {
+		UserEntity user = userRep.returnUserByEmail(username);
+		System.out.println(username);
+		return user.user_id();
+	}
+	
+	private List<Book> getBooks(List<Transaction> tr, List<Book> books) {
+		int dlz = tr.size();
+		int poz;
+		List<Book> contain = new ArrayList<Book>();
+		for(int i = 0; i < dlz; i++) {
+			poz = dlz-i;
+			if(tr.get(poz).action().equals("Borrow")) {
+				if(books.contains(tr.get(poz)) == false) {
+					if(contain.contains(tr.get(poz))) {
+						books.add(displayBook(tr.get(poz).book_id()));
+						i = 0;
+					}
+				}
+			}else if(tr.get(poz).action().equals("Return")) {
+				if(books.contains(tr.get(poz)) == true) {
+					books.remove(displayBook(tr.get(poz).book_id()));
+					i = 0;
+				}
+			}
+		}
+		return books;
 	}
 }

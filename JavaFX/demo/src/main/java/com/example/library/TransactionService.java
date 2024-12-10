@@ -17,9 +17,12 @@ public class TransactionService {
 
     // Fetch all transactions
     public String fetchAllTransactions() {
+    	
         try {
+        	
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL))
+                    .uri(URI.create(BASE_URL+"/user/all"))
+                    .header("Authorization", "Bearer " + AuthService.getToken())
                     .GET()
                     .build();
 
@@ -35,14 +38,15 @@ public class TransactionService {
     public boolean recordTransaction(String bookTitle, String username, String action) {
         try {
             String requestBody = String.format(
-                    "{\"bookTitle\": \"%s\", \"username\": \"%s\", \"action\": \"%s\"}",
+                    "{\"bookTitle\": \"%s\", \"username\": \"%s\", \"action\": \"%s\", \"date\": \"10.12.2024\"}",
                     bookTitle, username, action
             );
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_URL))
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .header("Authorization", "Bearer " + AuthService.getToken())
                     .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

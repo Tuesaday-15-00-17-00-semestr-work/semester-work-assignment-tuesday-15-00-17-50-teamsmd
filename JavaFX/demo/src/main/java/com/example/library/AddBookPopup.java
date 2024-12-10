@@ -41,18 +41,28 @@ public class AddBookPopup {
         Label authorLabel = new Label("Author:");
         TextField authorField = new TextField();
         authorField.setPrefWidth(200);
+        
+        Label isbnLabel = new Label("ISBN:");
+        TextField isbnField = new TextField();
+        authorField.setPrefWidth(200);
+        
+        Label avabLabel = new Label("Copies:");
+        TextField avabField = new TextField();
+        authorField.setPrefWidth(200);
 
         Button submitButton = new Button("Add Book");
         submitButton.setOnAction(e -> {
             String title = titleField.getText();
             String author = authorField.getText();
+            int isbn = Integer.parseInt(isbnField.getText());
+            int avab = Integer.parseInt(avabField.getText());
 
             // Check if fields are empty
             if (title.isEmpty() || author.isEmpty()) {
                 showError("All fields must be filled!");
             } else {
                 // Automatically set ISBN to 0 and available copies to 1
-                boolean success = mainApp.getBookService().addBook(title, author);
+                boolean success = mainApp.getBookService().addBook(title, author, isbn, avab);
 
                 if (success) {
                     showSuccess("Book added successfully!");
@@ -64,10 +74,11 @@ public class AddBookPopup {
         });
 
         // Adding elements to the layout
-        popupLayout.getChildren().addAll(popupLabel, nameLabel, titleField, authorLabel, authorField, submitButton);
+        popupLayout.getChildren().addAll(popupLabel, nameLabel, titleField, authorLabel, authorField, isbnLabel, isbnField,
+        		avabLabel, avabField, submitButton);
 
         // Set the scene for the popup
-        Scene popupScene = new Scene(popupLayout, 300, 250);
+        Scene popupScene = new Scene(popupLayout, 300, 400);
         popupStage.setTitle("Add New Book");
         popupStage.setScene(popupScene);
         popupStage.show();

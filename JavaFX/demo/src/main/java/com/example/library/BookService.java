@@ -192,11 +192,11 @@ public class BookService {
      * @param author Author of the book.
      * @return True if the book is added successfully, false otherwise.
      */
-    public boolean addBook(String title, String author) {
+    public boolean addBook(String title, String author, int isbn, int avab) {
         try {
             String requestBody = String.format(
-                    "{\"title\": \"%s\", \"author\": \"%s\", \"isbn\": 0, \"available_copies\": 1}",
-                    title, author
+                    "{\"title\": \"%s\", \"author\": \"%s\", \"isbn\": %d, \"available_copies\": %d}",
+                    title, author, isbn, avab
             );
 
             HttpRequest request = HttpRequest.newBuilder()

@@ -36,8 +36,13 @@ public class BookController {
 	}
 		
 	@GetMapping("/user/{id}")
-	Book findBookByID(@PathVariable int id) {
+	Book findBookByID(@PathVariable String id) {
 		return bookRep.displayBook(id);
+	}
+	
+	@GetMapping("/user/mybooks/{username}")
+	List<Book> findmybooks(@PathVariable String username) {
+		return bookRep.myBooks(username);
 	}
 		
 //-------------------------------------POST----------------------------------------|
