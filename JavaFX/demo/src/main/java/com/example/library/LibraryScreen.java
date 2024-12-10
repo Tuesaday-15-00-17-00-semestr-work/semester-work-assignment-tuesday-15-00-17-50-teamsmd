@@ -3,7 +3,6 @@ package com.example.library;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
@@ -15,6 +14,7 @@ public class LibraryScreen {
 
     private MainApp mainApp;
     private BookService bookService = new BookService(); // Use BookService for API calls
+    private ObservableList<BookEntity> borrowedBooksData = FXCollections.observableArrayList();
 
     public LibraryScreen(MainApp mainApp) {
         this.mainApp = mainApp;
@@ -29,6 +29,7 @@ public class LibraryScreen {
         titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
         TableView<BookEntity> borrowedBooksTable = new TableView<>();
+        borrowedBooksTable.setItems(borrowedBooksData);
 
         // Create columns for the table
         TableColumn<BookEntity, Integer> idColumn = new TableColumn<>("ID");
@@ -42,14 +43,14 @@ public class LibraryScreen {
 
         borrowedBooksTable.getColumns().addAll(idColumn, titleColumn, authorColumn);
 
-        // Fetch borrowed books
-        refreshBorrowedBooks(borrowedBooksTable);
+        // Refresh borrowed books
+        refreshBorrowedBooks();
 
         Button refreshButton = new Button("Refresh");
         Button returnButton = new Button("Return");
 
         // Refresh action
-        refreshButton.setOnAction(e -> refreshBorrowedBooks(borrowedBooksTable));
+        refreshButton.setOnAction(e -> refreshBorrowedBooks());
 
         // Return action
         returnButton.setOnAction(e -> {
@@ -57,7 +58,8 @@ public class LibraryScreen {
             if (selectedBook != null) {
                 boolean success = bookService.returnBook(selectedBook.getId());
                 if (success) {
-                    borrowedBooksTable.getItems().remove(selectedBook);
+                    borrowedBooksData.remove(selectedBook);
+                    borrowedBooksTable.refresh();
                     showSuccess("You have returned \"" + selectedBook.getTitle() + "\"");
                 } else {
                     showError("Failed to return book. Please try again.");
@@ -71,10 +73,22 @@ public class LibraryScreen {
         mainApp.getBorderPane().setCenter(layout);
     }
 
-    private void refreshBorrowedBooks(TableView<BookEntity> borrowedBooksTable) {
-        List<BookEntity> books = bookService.fetchBorrowedBooks();
-        ObservableList<BookEntity> bookData = FXCollections.observableArrayList(books);
-        borrowedBooksTable.setItems(bookData);
+    private void refreshBorrowedBooks() {
+        System.out.println("Refreshing borrowed books...");
+        int userId = 1;  // Replace with actual user ID from session or login logic
+        List<BookEntity> books = bookService.fetchBorrowedBooks(userId);  // Pass userId here
+
+        System.out.println("Fetched borrowed books: " + books);
+
+        borrowedBooksData.setAll(books);
+        System.out.println("Updated borrowed books list in table: " + borrowedBooksData);
+    }
+
+
+    public void addBorrowedBook(BookEntity book) {
+        System.out.println("Adding borrowed book to My Books: " + book);
+        borrowedBooksData.add(book);
+        System.out.println("Borrowed books list now: " + borrowedBooksData);
     }
 
     private void showError(String message) {

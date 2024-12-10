@@ -98,6 +98,8 @@ public class BookService {
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println("Borrow Response Status: " + response.statusCode());
+            System.out.println("Borrow Response Body: " + response.body());
             return response.statusCode() == 200 || response.statusCode() == 201;
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,21 +108,23 @@ public class BookService {
     }
 
     /**
-     * Fetch borrowed books from the backend.
+     * Fetch borrowed books from the backend for the current user.
      *
+     * @param userId The ID of the user.
      * @return A list of BookEntity objects representing borrowed books.
      */
-    public List<BookEntity> fetchBorrowedBooks() {
+    public List<BookEntity> fetchBorrowedBooks(int userId) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/lib/transactions/user/borrowed"))
+                    .uri(URI.create(BASE_URL + "/lib/transactions/user/" + userId))
                     .header("Authorization", "Bearer " + AuthService.getToken())
                     .GET()
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            System.out.println("Borrowed Books Response: " + responseBody);
+            System.out.println("Borrowed Books Response Status: " + response.statusCode());
+            System.out.println("Borrowed Books Response Body: " + response.body());
 
             List<BookEntity> books = new ArrayList<>();
             if (responseBody.startsWith("[") && responseBody.endsWith("]")) {
@@ -195,7 +199,7 @@ public class BookService {
     public boolean addBook(String title, String author) {
         try {
             String requestBody = String.format(
-                    "{\"title\": \"%s\", \"author\": \"%s\", \"isbn\": 0, \"available_copies\": 1}",
+                    "{\"title\": \"%s\", \"author\": \"%s\", \"isbn\": 2, \"available_copies\": 1}",
                     title, author
             );
 
