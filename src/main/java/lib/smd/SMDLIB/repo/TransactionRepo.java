@@ -118,7 +118,7 @@ public class TransactionRepo {
 			}else if(action.equals("Return")) {
 				change = 1;
 			}else {
-				throw new SQLException();
+				return;
 			}
 			
 			bookRep.updateBook(book_id, change);

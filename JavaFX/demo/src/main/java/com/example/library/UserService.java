@@ -102,15 +102,15 @@ public class UserService {
     // Delete a user (admin functionality)
     public boolean deleteUser(int userId) {
         try {
-            String requestBody = String.format("{\"id\": %d}", userId);
+            //String requestBody = String.format("{\"id\": %d}", userId);
 
             // Correct DELETE request without a body
             String token = "Bearer " + AuthService.getToken();  // Use the token for auth
+            String uid = String.valueOf(userId);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/delete"))
+                    .uri(URI.create(BASE_URL + "/delete/"+uid))
                     .DELETE()
-                    .header("Content-Type", "application/json")
                     .header("Authorization", token) // Include token in the header
                     .build();
 
