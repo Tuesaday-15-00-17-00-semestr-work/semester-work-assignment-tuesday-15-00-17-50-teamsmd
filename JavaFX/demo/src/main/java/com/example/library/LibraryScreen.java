@@ -1,12 +1,15 @@
 package com.example.library;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.List;
 
 public class LibraryScreen {
 
@@ -25,24 +28,37 @@ public class LibraryScreen {
         Label titleLabel = new Label("Your Borrowed Books");
         titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
-        ListView<String> borrowedBooksListView = new ListView<>();
+        TableView<BookEntity> borrowedBooksTable = new TableView<>();
+
+        // Create columns for the table
+        TableColumn<BookEntity, Integer> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<BookEntity, String> titleColumn = new TableColumn<>("Title");
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+
+        TableColumn<BookEntity, String> authorColumn = new TableColumn<>("Author");
+        authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+
+        borrowedBooksTable.getColumns().addAll(idColumn, titleColumn, authorColumn);
+
+        // Fetch borrowed books
+        refreshBorrowedBooks(borrowedBooksTable);
+
         Button refreshButton = new Button("Refresh");
         Button returnButton = new Button("Return");
 
-        // Initially, borrowed books list is empty
-        refreshBorrowedBooks(borrowedBooksListView);
-
         // Refresh action
-        refreshButton.setOnAction(e -> refreshBorrowedBooks(borrowedBooksListView));
+        refreshButton.setOnAction(e -> refreshBorrowedBooks(borrowedBooksTable));
 
         // Return action
         returnButton.setOnAction(e -> {
-            String selectedBook = borrowedBooksListView.getSelectionModel().getSelectedItem();
+            BookEntity selectedBook = borrowedBooksTable.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {
-                boolean success = bookService.returnBook(selectedBook); // Return book to library
+                boolean success = bookService.returnBook(selectedBook.getId());
                 if (success) {
-                    borrowedBooksListView.getItems().remove(selectedBook);
-                    showSuccess("You have returned \"" + selectedBook + "\"");
+                    borrowedBooksTable.getItems().remove(selectedBook);
+                    showSuccess("You have returned \"" + selectedBook.getTitle() + "\"");
                 } else {
                     showError("Failed to return book. Please try again.");
                 }
@@ -51,38 +67,14 @@ public class LibraryScreen {
             }
         });
 
-        layout.getChildren().addAll(titleLabel, borrowedBooksListView, refreshButton, returnButton);
+        layout.getChildren().addAll(titleLabel, borrowedBooksTable, refreshButton, returnButton);
         mainApp.getBorderPane().setCenter(layout);
     }
 
-    private void refreshBorrowedBooks(ListView<String> borrowedBooksListView) {
-        String response = bookService.fetchBorrowedBooks();
-        borrowedBooksListView.getItems().clear();
-
-        System.out.println("Borrowed Books - Response: " + response);
-
-        if (!response.equals("[]")) {
-            String[] books = response.split("\\},\\{");
-            for (String book : books) {
-                String title = extractTitleFromBook(book);
-                if (!title.isEmpty()) {
-                    borrowedBooksListView.getItems().add(title);
-                }
-            }
-        } else {
-            System.out.println("No books borrowed yet.");
-        }
-    }
-
-    private String extractTitleFromBook(String book) {
-        String titleKey = "\"title\":";
-        int titleIndex = book.indexOf(titleKey);
-        if (titleIndex != -1) {
-            int start = titleIndex + titleKey.length() + 1;
-            int end = book.indexOf("\"", start);
-            return book.substring(start, end);
-        }
-        return ""; // Return empty if no title found
+    private void refreshBorrowedBooks(TableView<BookEntity> borrowedBooksTable) {
+        List<BookEntity> books = bookService.fetchBorrowedBooks();
+        ObservableList<BookEntity> bookData = FXCollections.observableArrayList(books);
+        borrowedBooksTable.setItems(bookData);
     }
 
     private void showError(String message) {
